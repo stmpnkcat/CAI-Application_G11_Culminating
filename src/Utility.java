@@ -1,16 +1,12 @@
-import java.awt.Color;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 /*
@@ -71,13 +67,57 @@ public class Utility {
 	public static void formatButton(JButton button) {
 		
 		// Change the button's appearance
-		button.setFont(Fonts.buttonFont);
+		button.setFont(Fonts.button);
 		button.setForeground(Color.BLACK);
 		
 		// Make the button's background invisible
 		button.setOpaque(false);
 		button.setContentAreaFilled(false);
 		button.setBorderPainted(false);
+		
+	}
+	
+	// This method formats the textarea given
+	public static void formatTextArea(JTextArea textArea) {
+
+		textArea.setFont(Fonts.code);
+		textArea.setRows(5);
+		textArea.setCaretColor(Color.WHITE);
+		textArea.setBackground(Color.BLACK);
+		textArea.setForeground(Color.WHITE);
+		textArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE, 1), 
+				BorderFactory.createEmptyBorder(5,5,5,5)));
+		
+	}
+	
+	public static JPanel createBackPanel(final JFrame frame) {
+		
+		JPanel backPanel = new JPanel();
+		backPanel.setOpaque(false);
+		
+		JButton titleButton = new JButton();
+		titleButton.setIcon(scaleImageIcon(Icons.ARROW_LEFT, 100, 100));
+		formatButton(titleButton);
+		
+		titleButton.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				frame.dispose();
+				new TitleFrame();
+				
+			}
+			
+		});
+		
+		backPanel.add(titleButton);
+		
+		JLabel backLabel = new JLabel("BACK");
+		backLabel.setFont(Fonts.button);
+		
+		backPanel.add(backLabel);
+		
+		return backPanel;
 		
 	}
 		

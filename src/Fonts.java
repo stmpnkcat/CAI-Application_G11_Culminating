@@ -14,11 +14,12 @@ public class Fonts {
 	public static Font handwriting;
 	
 	// Declare fonts
-	public static Font headerFont;
-	public static Font titleFont;
-	public static Font buttonFont;
-	public static Font nameFont;
-	public static Font dialogueFont;
+	public static Font header;
+	public static Font title;
+	public static Font button;
+	public static Font name;
+	public static Font dialogue;
+	public static Font code;
 	
 	// This method creates the fonts and is called at the start of the program
 	public static void createFonts () {
@@ -47,11 +48,12 @@ public class Fonts {
 		}
 		
 		// Create the fonts
-		headerFont = new Font(Font.MONOSPACED, Font.PLAIN, 40);
-		titleFont = handwriting.deriveFont(200f);
-		buttonFont = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
-		nameFont = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
-		dialogueFont = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+		header = new Font(Font.MONOSPACED, Font.PLAIN, 40);
+		title = handwriting.deriveFont(200f);
+		button = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
+		name = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
+		dialogue = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+		code = new Font(Font.MONOSPACED, Font.PLAIN, 15);
 		
 	}
 	
