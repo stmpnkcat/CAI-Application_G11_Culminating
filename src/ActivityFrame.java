@@ -1,8 +1,10 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,28 +31,6 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		
 		Utility.formatFrame(this);
 		setLayout(null);
-		
-//		ArrayList<String> d = new ArrayList<>();
-//		ArrayList<ImageIcon> i = new ArrayList<>();
-//		
-//		d.add("w");
-//		i.add(Icons.BASIL_NEUTRAL);
-//		
-//		Dialogue dialogue = new Dialogue(d, i);
-//		
-//		profilePanel = dialogue.getProfilePanel();
-//		namePanel = dialogue.getNamePanel();
-//		dialoguePanel = dialogue.getDialoguePanel();
-//		backPanel = Utility.createBackPanel(this);
-//		
-//		profilePanel.setBounds(1200, 200, 170, 170);
-//		add(profilePanel);
-//		
-//		namePanel.setBounds(25, 300, 200, 75);
-//		add(namePanel);
-//		
-//		dialoguePanel.setBounds(25, 400, 1350, 300);
-//		add(dialoguePanel);
 		
 		board.setBounds(50, 105, CAIApplication.COLUMNS * CAIApplication.TILE_SIZE + 10, 
 				CAIApplication.ROWS * CAIApplication.TILE_SIZE + 10);
@@ -107,12 +87,86 @@ public class ActivityFrame extends JFrame implements ActionListener{
 			
 			runButton.setEnabled(false);
 			
-			Deque<Integer> q = new ArrayDeque<>();
-			q.add(4);
-			q.add(-1);
-			q.add(1);
+			String text = codeTextArea.getText();
+			String[] lines = text.split("\n");
 			
-			board.run(q);
+			Deque<Integer> commandsQueue = new ArrayDeque<>();
+			
+			boolean isValid = true;
+			
+			for (String line : lines) {
+
+				if ((line.indexOf("move(") == 0 || line.indexOf("move (") == 0)
+						&& line.indexOf(");") == line.length() - 2) {
+					
+					final String numbers = "1234567890";
+					
+					int startIndex = line.indexOf('(') + 1;
+					int endIndex = line.lastIndexOf(')');
+					
+					String numberString = "";
+					
+					for (int i = startIndex; i < endIndex; i++) {
+						
+						char currChar = line.charAt(i);
+						
+						if (!numbers.contains("" + currChar)) 
+							isValid = false;
+						else {
+							numberString += currChar;
+						}
+						
+					}
+					
+					if (isValid) commandsQueue.add(Integer.parseInt(numberString));
+					
+				} else if (line.indexOf("rotate_clockwise();") == 0 || line.indexOf("rotate_clockwise ();") == 0) {
+					
+					commandsQueue.add(-2);
+					
+				} else if (line.indexOf("rotate_counter_clockwise();") == 0 || line.indexOf("rotate_counter_clockwise ();") == 0) {
+					
+					commandsQueue.add(-1);
+					
+				} else {
+
+					isValid = false;
+					
+				}
+
+			}
+
+			if (isValid) {
+				
+				board.run(commandsQueue);
+				
+			} else {
+				
+				runButton.setEnabled(true);
+				
+				ArrayList<String> dialogueList = new ArrayList<>();
+				ArrayList<ImageIcon> imageList = new ArrayList<>();
+				
+				dialogueList.add("error");
+				imageList.add(Icons.BASIL_ANGRY);
+				
+				Dialogue dialogue = new Dialogue(dialogueList, imageList);
+				
+				profilePanel = dialogue.getProfilePanel();
+				
+				namePanel = dialogue.getNamePanel();
+				
+				dialoguePanel = dialogue.getDialoguePanel();
+				
+				profilePanel.setBounds(1200, 200, 170, 170);
+				namePanel.setBounds(25, 300, 200, 75);
+				dialoguePanel.setBounds(25, 400, 1350, 300);
+				
+				add(profilePanel);
+				add(namePanel);
+				add(dialoguePanel);
+				
+			}
 			
 		}
 		

@@ -21,11 +21,9 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 		setLayout(null);
 		
 		ArrayList<String> q = new ArrayList<>();
-		q.add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAA AAAAAAAAA AAAAAAAAA AAAAAAA AAAAAAAA AAAAAAAAAA AAAAAA AAAA");
-		q.add("sigma sigma boy");
+		q.add("error");
 		
 		ArrayList<ImageIcon> a = new ArrayList<>();
-		a.add(Icons.BASIL_NEUTRAL);
 		a.add(Icons.BASIL_ANGRY);
 		
 		Dialogue dialogue = new Dialogue(q, a, currIndexButton);

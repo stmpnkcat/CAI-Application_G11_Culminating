@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-public class Dialogue implements ActionListener {
+public class Dialogue extends JPanel implements ActionListener {
 
 	// Declare panels to be used by other classes
 	private JPanel profilePanel = new JPanel();
@@ -63,10 +63,12 @@ public class Dialogue implements ActionListener {
 		profileLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5)); // Add a border to center the image in the panel
 		
 		// Add the profile image
+		profileLabel.setBounds(0, 0, 170, 170);
 		profilePanel.add(profileLabel, BorderLayout.SOUTH); // Put the image at the bottom of the panel
 
 		// Create the name panel
 		Utility.formatPanel(namePanel);
+		
 		
 		// Create the name label
 		nameLabel.setText("BASIL");
@@ -74,6 +76,7 @@ public class Dialogue implements ActionListener {
 		nameLabel.setFont(Fonts.name);
 		
 		// Add the name label
+		nameLabel.setBounds(0, 0, 200, 75);
 		namePanel.add(nameLabel);
 		
 		// Create the dialogue panel
@@ -85,9 +88,10 @@ public class Dialogue implements ActionListener {
 		dialogueLabel.setForeground(Color.WHITE);
 		dialogueLabel.setFont(Fonts.dialogue);
 		dialogueLabel.setVerticalAlignment(SwingConstants.TOP); // Set the text to align to the top
+		dialogueLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 0));
 		
 		// Add the dialogue label
-		dialogueLabel.setBounds(50, 50, 1250, 250);
+		dialogueLabel.setBounds(0, 0, 1350, 350);
 		dialoguePanel.add(dialogueLabel);
 		
 		// Create the back button
@@ -114,7 +118,7 @@ public class Dialogue implements ActionListener {
 	}
 	
 	// This method updates the dialogue when the dialogue changes
-	private void update() {
+	private void updateDialogue() {
 		
 		if (currIndex >= 0)
 			profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currIndex), 150, 150));
@@ -158,7 +162,7 @@ public class Dialogue implements ActionListener {
 
 			currIndex--;
 			
-			update();
+			updateDialogue();
 			
 			typewriterTimer.start();
 			
@@ -181,7 +185,7 @@ public class Dialogue implements ActionListener {
 
 				currIndex = -1;
 				
-				update();
+				updateDialogue();
 				
 				typewriterTimer.stop();
 				dialoguePanel.setVisible(false);
@@ -195,7 +199,7 @@ public class Dialogue implements ActionListener {
 				
 				currIndex++;
 				
-				update();
+				updateDialogue();
 				
 				profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currIndex), 150, 150));
 				

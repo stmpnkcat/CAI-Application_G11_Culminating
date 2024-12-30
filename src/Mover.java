@@ -101,21 +101,6 @@ public class Mover extends JLabel implements ActionListener{
 		
 	}
 
-	
-	// This method gets the next row based on the delta values
-	public int getNextRow() {
-		
-		return row + dRow;
-		
-	}
-	
-	// This method gets the next column based on the delta values
-	public int getNextColumn() {
-		
-		return column + dColumn;
-		
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -141,6 +126,21 @@ public class Mover extends JLabel implements ActionListener{
 			tickTimer.stop();
 			
 		}
+		
+	}
+
+	
+	// This method gets the next row based on the delta values
+	public int getNextRow() {
+		
+		return row + dRow;
+		
+	}
+	
+	// This method gets the next column based on the delta values
+	public int getNextColumn() {
+		
+		return column + dColumn;
 		
 	}
 	

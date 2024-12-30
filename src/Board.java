@@ -22,9 +22,10 @@ public class Board extends JPanel implements ActionListener {
 	private Timer endTimer;
 
 	private int level;
-	private boolean[][] collisionMatrix;
-	private int endRow;
-	private int endColumn;
+	private char[][] levelMatrix;
+	private int targetRow;
+	private int targetColumn;
+	
 	private Deque<Integer> commandsQueue;
 	
 	public Board(ActivityFrame frame) {
@@ -35,19 +36,16 @@ public class Board extends JPanel implements ActionListener {
 		
 		runTimer = new Timer(CAIApplication.MOVE_DELAY, this);
 		endTimer = new Timer(CAIApplication.END_DELAY, this);
+
+		levelMatrix = new char[CAIApplication.ROWS][CAIApplication.COLUMNS];
 		
-//		loadBoard("levels/level_1.txt");
-		
-		collisionMatrix = new boolean[CAIApplication.ROWS][CAIApplication.COLUMNS];
+		loadBoard("levels/level_1.txt");
 
 		Utility.formatPanel(this);
 		setLayout(null);
 		
 		backgroundLabel = new JLabel();
 		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[0], WIDTH, HEIGHT));
-
-		player = new Mover(5, 1, 3);
-		add(player);
 		
 		backgroundLabel.setBounds(5, 5, WIDTH, HEIGHT);
 		add(backgroundLabel);
@@ -77,11 +75,15 @@ public class Board extends JPanel implements ActionListener {
 				// Iterate through every character in the current row
 				for (int column = 0; column < lineArray.length; column++) {
 					
+					levelMatrix[row][column] = lineArray[column];
+					
 					// Set the collision
-					if (lineArray[column] == CAIApplication.ID_WALL)
-						collisionMatrix[row][column] = true;
-					else 
-						collisionMatrix[row][column] = false;
+					if (lineArray[column] == CAIApplication.ID_PLAYER) {
+						
+						player = new Mover(column, row, 3);
+						add(player);
+						
+					}
 						
 				}
 				
@@ -126,7 +128,20 @@ public class Board extends JPanel implements ActionListener {
 			
 		} else {
 			
-			player.move();
+			if (levelMatrix[player.getNextRow()][player.getNextColumn()] == CAIApplication.ID_FINISH) {
+				
+				System.out.println("next level");
+				level++;
+				
+				player.updateSprite();
+				
+				runTimer.stop();
+				endTimer.start();
+				
+			}
+			else if (levelMatrix[player.getNextRow()][player.getNextColumn()] != CAIApplication.ID_WALL)
+				player.move();
+
 			
 			if (command > 1) commandsQueue.addFirst(command - 1);
 			

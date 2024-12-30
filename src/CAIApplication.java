@@ -23,8 +23,9 @@ public class CAIApplication {
 	public static final int MOVE_DELAY = 500;
 	public static final int END_DELAY = 2000;
 	
+	public static final int ID_PLAYER = 'P';
 	public static final int ID_WALL = 'X';
-	public static final int ID_PICNIC = 'P';
+	public static final int ID_FINISH = 'F';
 
 	public static void main (String args[]) {
 		
