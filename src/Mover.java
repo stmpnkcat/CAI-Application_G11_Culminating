@@ -64,6 +64,8 @@ public class Mover extends JLabel implements ActionListener{
 		row = defaultRow;
 		column = defaultColumn;
 		direction = defaultDirection;
+		dRow = 0;
+		dColumn = 0;
 		
 		setBounds(column * CAIApplication.TILE_SIZE, row * CAIApplication.TILE_SIZE, 
 				CAIApplication.TILE_SIZE, CAIApplication.TILE_SIZE);
@@ -141,6 +143,16 @@ public class Mover extends JLabel implements ActionListener{
 	public int getNextColumn() {
 		
 		return column + dColumn;
+		
+	}
+	
+	public void setNewSpawn(int column, int row, int direction) {
+		
+		defaultRow = row;
+		defaultColumn = column;
+		defaultDirection = direction;
+
+		reset();
 		
 	}
 	

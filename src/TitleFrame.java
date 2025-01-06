@@ -2,10 +2,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 /*
  * This class creates the title page of the program
@@ -13,11 +10,15 @@ import javax.swing.JPanel;
  */
 public class TitleFrame extends JFrame implements ActionListener{
 	
-	// Declaring the swing components
+	// Declare the swing components
 	private JLabel headerLabel;
 	private JLabel titleLabel;
+	
+	// Declare the button panel
 	private JPanel buttonPanel;
-	private JButton conceptsButton; 
+	
+	// Declare the buttons
+	private JButton conceptsButton;
 	private JButton activityButton;
 	private JButton assessmentButton;
 	private JButton exitButton;
@@ -47,7 +48,7 @@ public class TitleFrame extends JFrame implements ActionListener{
 		
 		// Set the background of the panel
 		buttonPanel = new JPanel();
-		buttonPanel.setBackground(new Color(0, 255, 100));
+		buttonPanel.setOpaque(false);
 		
 		// Create the concepts button
 		conceptsButton = new JButton("CONCEPTS");
@@ -85,6 +86,7 @@ public class TitleFrame extends JFrame implements ActionListener{
 		setVisible(true);
 	}
 
+	// This method is called whenever an action is performed
 	@Override
 	public void actionPerformed(ActionEvent e) {
 

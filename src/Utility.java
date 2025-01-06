@@ -91,6 +91,17 @@ public class Utility {
 		
 	}
 	
+	public static void formatRadioButton(JRadioButton rb) {
+
+		rb.setFont(Fonts.rb);
+		rb.setForeground(Color.WHITE);
+		
+		rb.setOpaque(false);
+		rb.setContentAreaFilled(false);
+		rb.setBorderPainted(false);
+		
+	}
+	
 	public static JPanel createBackPanel(final JFrame frame) {
 		
 		JPanel backPanel = new JPanel();
@@ -122,4 +133,30 @@ public class Utility {
 		
 	}
 
+	public static void createQuickDialogue(JFrame frame, JButton currIndexButton, String text, ImageIcon profile) {
+		
+		ArrayList<String> dialogueList = new ArrayList<>();
+		ArrayList<ImageIcon> imageList = new ArrayList<>();
+		
+		dialogueList.add(text);
+		imageList.add(profile);
+		
+		Dialogue dialogue = new Dialogue(dialogueList, imageList, currIndexButton);
+		
+		JPanel profilePanel = dialogue.getProfilePanel();
+		
+		JPanel namePanel = dialogue.getNamePanel();
+		
+		JPanel dialoguePanel = dialogue.getDialoguePanel();
+		
+		profilePanel.setBounds(1200, 200, 170, 170);
+		namePanel.setBounds(25, 300, 200, 75);
+		dialoguePanel.setBounds(25, 400, 1350, 300);
+		
+		frame.add(profilePanel);
+		frame.add(namePanel);
+		frame.add(dialoguePanel);
+		
+	}
+	
 }

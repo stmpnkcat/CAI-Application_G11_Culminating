@@ -22,30 +22,27 @@ public class Board extends JPanel implements ActionListener {
 	private Timer endTimer;
 
 	private int level;
+	private boolean isFinished;
 	private char[][] levelMatrix;
-	private int targetRow;
-	private int targetColumn;
 	
 	private Deque<Integer> commandsQueue;
 	
 	public Board(ActivityFrame frame) {
 		
 		this.frame = frame;
-
-		level = 1;
 		
 		runTimer = new Timer(CAIApplication.MOVE_DELAY, this);
 		endTimer = new Timer(CAIApplication.END_DELAY, this);
 
 		levelMatrix = new char[CAIApplication.ROWS][CAIApplication.COLUMNS];
-		
-		loadBoard("levels/level_1.txt");
 
 		Utility.formatPanel(this);
 		setLayout(null);
 		
 		backgroundLabel = new JLabel();
-		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[0], WIDTH, HEIGHT));
+
+		level = 1;
+		loadLevel();
 		
 		backgroundLabel.setBounds(5, 5, WIDTH, HEIGHT);
 		add(backgroundLabel);
@@ -71,7 +68,7 @@ public class Board extends JPanel implements ActionListener {
 				
 				// Create a char array of the current row
 				char[] lineArray = inputFile.nextLine().toCharArray();
-				
+
 				// Iterate through every character in the current row
 				for (int column = 0; column < lineArray.length; column++) {
 					
@@ -80,8 +77,16 @@ public class Board extends JPanel implements ActionListener {
 					// Set the collision
 					if (lineArray[column] == CAIApplication.ID_PLAYER) {
 						
-						player = new Mover(column, row, 3);
-						add(player);
+						if (level == 1) {
+
+							player = new Mover(column, row, 3);
+							add(player);
+							
+						} else if (level == 2){
+							
+							player.setNewSpawn(column, row, 1);
+							
+						}
 						
 					}
 						
@@ -103,8 +108,18 @@ public class Board extends JPanel implements ActionListener {
 		}
 		
 	}
+	
+	public void loadLevel() {
+		
+		loadBoard("levels/level_" + level + ".txt");
+		
+		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[level - 1], WIDTH, HEIGHT));
+		
+	}
 
 	public void run(Deque<Integer> commandsQueue) {
+		
+		System.out.println(player.getNextRow() + " " + player.getNextColumn());
 		
 		this.commandsQueue = commandsQueue;
 		
@@ -126,24 +141,29 @@ public class Board extends JPanel implements ActionListener {
 		
 			player.rotateCounterClockwise();
 			
-		} else {
+		} else if (command < 12 && player.getNextColumn() > 0 && player.getNextRow() > 0 && 
+				player.getNextColumn() < CAIApplication.COLUMNS && player.getNextRow() < CAIApplication.ROWS){
 			
 			if (levelMatrix[player.getNextRow()][player.getNextColumn()] == CAIApplication.ID_FINISH) {
 				
-				System.out.println("next level");
+				frame.enableAll(false);
+				
 				level++;
+
+				Utility.createQuickDialogue(frame, frame.getCurrIndexButton(), "yay you won!", Icons.BASIL_NEUTRAL);
 				
 				player.updateSprite();
 				
 				runTimer.stop();
-				endTimer.start();
+
+				isFinished = true;
 				
 			}
 			else if (levelMatrix[player.getNextRow()][player.getNextColumn()] != CAIApplication.ID_WALL)
 				player.move();
 
-			
-			if (command > 1) commandsQueue.addFirst(command - 1);
+			if (command > 1) 
+				commandsQueue.addFirst(command - 1);
 			
 		}
 		
@@ -167,12 +187,16 @@ public class Board extends JPanel implements ActionListener {
 			
 		} else if (e.getSource() == endTimer) {
 			
-			frame.runButtonEnabled(true);
+			frame.enableAll(true);
 			endTimer.stop();
 			player.reset();
 			
 		}
 		
+	}
+	
+	public boolean isFinished() {
+		return isFinished;
 	}
 	
 }

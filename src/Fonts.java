@@ -17,6 +17,7 @@ public class Fonts {
 	public static Font header;
 	public static Font title;
 	public static Font button;
+	public static Font rb;
 	public static Font name;
 	public static Font dialogue;
 	public static Font code;
@@ -51,6 +52,7 @@ public class Fonts {
 		header = new Font(Font.MONOSPACED, Font.PLAIN, 40);
 		title = handwriting.deriveFont(200f);
 		button = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
+		rb = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 		name = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
 		dialogue = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 		code = new Font(Font.MONOSPACED, Font.PLAIN, 15);
