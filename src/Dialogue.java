@@ -30,10 +30,10 @@ public class Dialogue extends JPanel implements ActionListener {
 	private Timer typewriterTimer = new Timer(CAIApplication.TYPEWRITER_DURATION, this);
 	
 	// Create a variable to hold the current dialogue number
-	private int currIndex = 0;
+	private int currDialogue = 0;
 	
 	// Create a button for passing along the current index (used for displaying diagrams)
-	private JButton currIndexButton;
+	private JButton currDialogueButton;
 	
 	// Create a list to hold the dialogue list
 	private ArrayList<String> dialogueList;
@@ -45,21 +45,22 @@ public class Dialogue extends JPanel implements ActionListener {
 	// Constructor that is called when a new dialogue is created
 	// Optional perameters for storing current index
 	//https://stackoverflow.com/questions/965690/how-do-i-use-optional-parameters-in-java
-	public Dialogue(ArrayList<String> dialogueList, ArrayList<ImageIcon> profileIconList, JButton... currIndexButton) {
+	public Dialogue(ArrayList<String> dialogueList, ArrayList<ImageIcon> profileIconList, JButton... currDialogueButton) {
+		super(); // Used to create the object
 		
 		// Set fields
 		this.dialogueList = dialogueList;
 		this.profileIconList = profileIconList;
 		
-		if (currIndexButton != null && currIndexButton.length != 0) // If the current index button exists
-			this.currIndexButton = currIndexButton[0]; // Pass along the first and only index of the array
+		if (currDialogueButton != null && currDialogueButton.length != 0) // If the current index button exists
+			this.currDialogueButton = currDialogueButton[0]; // Pass along the first and only index of the array
 		
 		// Create the profile panel
 		Utility.formatPanel(profilePanel);
 		profilePanel.setLayout(new BorderLayout());
 		
 		// Create the profile label
-		profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currIndex), 150, 150));
+		profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currDialogue), 150, 150));
 		profileLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5)); // Add a border to center the image in the panel
 		
 		// Add the profile image
@@ -68,7 +69,7 @@ public class Dialogue extends JPanel implements ActionListener {
 
 		// Create the name panel
 		Utility.formatPanel(namePanel);
-		
+		namePanel.setLayout(null);
 		
 		// Create the name label
 		nameLabel.setText("BASIL");
@@ -76,7 +77,7 @@ public class Dialogue extends JPanel implements ActionListener {
 		nameLabel.setFont(Fonts.name);
 		
 		// Add the name label
-		nameLabel.setBounds(0, 0, 200, 75);
+		nameLabel.setBounds(40, 0, 200, 75);
 		namePanel.add(nameLabel);
 		
 		// Create the dialogue panel
@@ -88,7 +89,7 @@ public class Dialogue extends JPanel implements ActionListener {
 		dialogueLabel.setForeground(Color.WHITE);
 		dialogueLabel.setFont(Fonts.dialogue);
 		dialogueLabel.setVerticalAlignment(SwingConstants.TOP); // Set the text to align to the top
-		dialogueLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 0));
+		dialogueLabel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 		
 		// Add the dialogue label
 		dialogueLabel.setBounds(0, 0, 1350, 350);
@@ -117,32 +118,33 @@ public class Dialogue extends JPanel implements ActionListener {
 		
 	}
 	
-	// This method updates the dialogue when the dialogue changes
+	// This method clears the dialogue
 	private void updateDialogue() {
 		
-		if (currIndex >= 0)
-			profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currIndex), 150, 150));
+		if (currDialogue >= 0)
+			profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currDialogue), 150, 150));
 		
 		dialogueLabel.setText("<html></html>");
 		charIndex = 0;
 		
-		if (currIndexButton != null) {
+		if (currDialogueButton != null) {
 
-			currIndexButton.setText("" + currIndex); // Set the text to track the current index
-			currIndexButton.doClick(); // Trigger the action performed function in the frame this is in
+			currDialogueButton.setText("" + currDialogue); // Set the text to track the current index
+			currDialogueButton.doClick(); // Trigger the action performed function in the frame this is in
 			
 		}
 		
 	}
 
+	// This method is called whenever an action occurs
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		// If the typewriter timer goes off
 		if (e.getSource() == typewriterTimer) {
 			
-			// If the dialogue is done
-			if (charIndex >= dialogueList.get(currIndex).length()) {
+			// Check if the dialogue is done
+			if (charIndex >= dialogueList.get(currDialogue).length()) {
 
 				typewriterTimer.stop();
 				return;
@@ -152,42 +154,58 @@ public class Dialogue extends JPanel implements ActionListener {
 			// Add another character for the typewriter effect
 			// Put the character in between the <html> and the </html> so it can be formatted to line wrap automatically
 			dialogueLabel.setText(dialogueLabel.getText().substring(0, dialogueLabel.getText().length() - 7) + // first part "<html>(current text)"
-					dialogueList.get(currIndex).charAt(charIndex) + // next character
+					dialogueList.get(currDialogue).charAt(charIndex) + // next character
 					dialogueLabel.getText().substring(dialogueLabel.getText().length() - 7)); // ending "</html>"
 			
 			// Increment the char index
 			charIndex++;
 			
+		// Check if the back button is pressed
 		} else if (e.getSource() == backButton) {
 
-			currIndex--;
+			// Decrease the current index
+			currDialogue--;
 			
+			// Update the dialogue
 			updateDialogue();
 			
+			// Start the typewriter animation
 			typewriterTimer.start();
 			
-			if (currIndex <= 0) {
+			// Hide the button if it is the first dialogue
+			if (currDialogue <= 0) {
 				
 				backButton.setVisible(false);
 				backButton.setEnabled(false);
 				
 			}
-			
+		
+		// Check if the next button is pressed
 		} else if (e.getSource() == nextButton) {
 
-			if (charIndex < dialogueList.get(currIndex).length()) {
+			// Check if there are still more content to show
+			if (charIndex < dialogueList.get(currDialogue).length()) {
 				
+				// Stop the typewriter
 				typewriterTimer.stop();
-				dialogueLabel.setText("<html>" + dialogueList.get(currIndex) + "</html>");
+				
+				// Finish showing all of the text
+				dialogueLabel.setText("<html>" + dialogueList.get(currDialogue) + "</html>");
 				charIndex = dialogueLabel.getText().length();
 				
-			} else if (currIndex >= dialogueList.size() - 1) {
+			// Check if there is no more dialogue to show
+			} else if (currDialogue >= dialogueList.size() - 1) {
 
-				currIndex = -1;
+				// Set the current index to -1
+				currDialogue = -1;
 				
+				// Update the dialogue
 				updateDialogue();
 				
+				// Stop the typewriter
 				typewriterTimer.stop();
+				
+				// Hide everything
 				dialoguePanel.setVisible(false);
 				dialoguePanel.setEnabled(false);
 				namePanel.setVisible(false);
@@ -195,15 +213,19 @@ public class Dialogue extends JPanel implements ActionListener {
 				profilePanel.setVisible(false);
 				profilePanel.setEnabled(false);
 				
+			// Otherwise show the next dialogue
 			} else {
 				
-				currIndex++;
+				// Increment the index
+				currDialogue++;
 				
+				// Update the dialogue
 				updateDialogue();
-				
-				profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currIndex), 150, 150));
-				
+
+				// Start the typewriter
 				typewriterTimer.start();
+				
+				// Show the back button
 				backButton.setVisible(true);
 				backButton.setEnabled(true);
 			
@@ -213,6 +235,7 @@ public class Dialogue extends JPanel implements ActionListener {
 		
 	}
 
+	// Getters and setters
 	public JPanel getProfilePanel() {
 		return profilePanel;
 	}
@@ -237,12 +260,12 @@ public class Dialogue extends JPanel implements ActionListener {
 		this.dialoguePanel = dialoguePanel;
 	}
 
-	public int getCurrIndex() {
-		return currIndex;
+	public int getCurrDialogue() {
+		return currDialogue;
 	}
 
-	public void setCurrIndex(int currIndex) {
-		this.currIndex = currIndex;
+	public void setCurrDialogue(int currDialogue) {
+		this.currDialogue = currDialogue;
 	}
 	
 }

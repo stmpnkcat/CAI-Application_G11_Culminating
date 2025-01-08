@@ -1,4 +1,5 @@
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -7,7 +8,16 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 /*
@@ -50,7 +60,7 @@ public class Utility {
 		frame.setSize(CAIApplication.SCREEN_WIDTH, CAIApplication.SCREEN_HEIGHT); // Set the size
 		frame.setTitle("Modular Programming - Methods"); // Set the title
 		frame.setIconImage(Icons.LOGO.getImage()); // Set the logo
-		frame.getContentPane().setBackground(new Color(0, 255, 100)); // Set the background color
+		frame.getContentPane().setBackground(new Color(0, 50, 50)); // Set the background color
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set the frame to close when the program ends
 		frame.setResizable(false); // Stop the frame from being resized
 		
@@ -59,9 +69,34 @@ public class Utility {
 	// This method formats the panel given
 	public static void formatPanel(JPanel panel) {
 		
-		panel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.BLACK, 1), new LineBorder(Color.WHITE, 5))); // Set the white border
+		panel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.BLACK, 1), 
+				new LineBorder(Color.white, 5))); // Set the white border
 		panel.setBackground(Color.BLACK); // Color background black
 		
+	}
+	
+	// This method formats the title button
+	public static void formatTitleButton(JButton button) {
+
+		// Change the button's appearance
+		button.setFont(Fonts.button);
+		button.setForeground(Color.WHITE);
+		button.setBackground(new Color(0, 50, 50));
+		
+		// Create the border for the button
+		Border empty = BorderFactory.createEmptyBorder(0, 40, 35, 40);
+
+		Border line = BorderFactory.createLineBorder(Color.BLACK, 1);
+		Border line2 = BorderFactory.createLineBorder(Color.white, 5);
+		
+		Border compound = BorderFactory.createCompoundBorder(line, empty);
+		
+		Border compound2 = BorderFactory.createCompoundBorder(line, line2);
+		
+		Border compoundFinal = BorderFactory.createCompoundBorder(compound2, compound);
+		
+		// Set the border for the button
+		button.setBorder(compoundFinal);
 	}
 	
 	// This method formats the frame given
@@ -70,10 +105,9 @@ public class Utility {
 		// Change the button's appearance
 		button.setFont(Fonts.button);
 		button.setForeground(Color.BLACK);
+		button.setBackground(Color.white);
 		
-		// Make the button's background invisible
 		button.setOpaque(false);
-		button.setContentAreaFilled(false);
 		button.setBorderPainted(false);
 		
 	}
@@ -91,6 +125,7 @@ public class Utility {
 		
 	}
 	
+	// This method formats the radio button given
 	public static void formatRadioButton(JRadioButton rb) {
 
 		rb.setFont(Fonts.rb);
@@ -101,16 +136,30 @@ public class Utility {
 		rb.setBorderPainted(false);
 		
 	}
+
+	// This method formats the text field given
+	public static void formatTextField(JTextField tf) {
+		
+		tf.setFont(Fonts.rb);
+		tf.setForeground(Color.WHITE);
+		tf.setBackground(Color.BLACK);
+		tf.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1)); // Create outline border
+		
+	}
 	
+	// This method creates the back panel to go back to title page
 	public static JPanel createBackPanel(final JFrame frame) {
 		
+		// Create the panel
 		JPanel backPanel = new JPanel();
 		backPanel.setOpaque(false);
 		
+		// Create the title button
 		JButton titleButton = new JButton();
 		titleButton.setIcon(scaleImageIcon(Icons.ARROW_LEFT, 100, 100));
 		formatButton(titleButton);
 		
+		// Tell the button to go back to title page when clicked
 		titleButton.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e) {
@@ -122,37 +171,46 @@ public class Utility {
 			
 		});
 		
+		// Add the button
 		backPanel.add(titleButton);
 		
+		// Create the back label
 		JLabel backLabel = new JLabel("BACK");
-		backLabel.setFont(Fonts.button);
+		backLabel.setFont(Fonts.button2);
 		
+		// Add the back label
 		backPanel.add(backLabel);
 		
+		// Send back panel
 		return backPanel;
 		
 	}
 
+	// This method creates a quick one line dialogue
 	public static void createQuickDialogue(JFrame frame, JButton currIndexButton, String text, ImageIcon profile) {
 		
+		// Create lists
 		ArrayList<String> dialogueList = new ArrayList<>();
 		ArrayList<ImageIcon> imageList = new ArrayList<>();
 		
+		// Add to the lists
 		dialogueList.add(text);
 		imageList.add(profile);
 		
+		// Create the dialogue
 		Dialogue dialogue = new Dialogue(dialogueList, imageList, currIndexButton);
 		
+		// Create the panels
 		JPanel profilePanel = dialogue.getProfilePanel();
-		
 		JPanel namePanel = dialogue.getNamePanel();
-		
 		JPanel dialoguePanel = dialogue.getDialoguePanel();
 		
-		profilePanel.setBounds(1200, 200, 170, 170);
+		// Set bounds of the panels
+		profilePanel.setBounds(1205, 200, 170, 170);
 		namePanel.setBounds(25, 300, 200, 75);
 		dialoguePanel.setBounds(25, 400, 1350, 300);
 		
+		// Add the panels
 		frame.add(profilePanel);
 		frame.add(namePanel);
 		frame.add(dialoguePanel);

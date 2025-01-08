@@ -7,48 +7,56 @@ import java.util.Scanner;
 
 import javax.swing.*;
 
+/*
+ * This class creates the minigame board
+ * The panel includes the background and the player
+ */
 public class Board extends JPanel implements ActionListener {
 
+	// Get the width and height from the main class
 	private final int WIDTH = CAIApplication.COLUMNS * CAIApplication.TILE_SIZE;
 	private final int HEIGHT = CAIApplication.ROWS * CAIApplication.TILE_SIZE;
 	
+	// Declare parent frame
 	private ActivityFrame frame;
 	
-	private JLabel backgroundLabel;
+	// Declare background label
+	private JLabel backgroundLabel = new JLabel();
 	
+	// Declare the player mover
 	private Mover player;
 	
-	private Timer runTimer;
-	private Timer endTimer;
-
-	private int level;
-	private boolean isFinished;
-	private char[][] levelMatrix;
+	// Create the run and end timer
+	private Timer runTimer = new Timer(CAIApplication.DELAY_MOVE, this);
+	private Timer endTimer = new Timer(CAIApplication.DELAY_END, this);
 	
+	// Declare variable for if the level is finished
+	private boolean isFinished;
+	
+	// Declare matrix for level data
+	private char[][] levelMatrix = new char[CAIApplication.ROWS][CAIApplication.COLUMNS];;
+	
+	// Declare deque for commands
 	private Deque<Integer> commandsQueue;
 	
+	// This constructor is called when a new board is created
 	public Board(ActivityFrame frame) {
 		
+		// Set fields
 		this.frame = frame;
-		
-		runTimer = new Timer(CAIApplication.MOVE_DELAY, this);
-		endTimer = new Timer(CAIApplication.END_DELAY, this);
 
-		levelMatrix = new char[CAIApplication.ROWS][CAIApplication.COLUMNS];
-
+		// Format the frame
 		Utility.formatPanel(this);
 		setLayout(null);
-		
-		backgroundLabel = new JLabel();
-
-		level = 1;
 		loadLevel();
 		
+		// Add the background label
 		backgroundLabel.setBounds(5, 5, WIDTH, HEIGHT);
 		add(backgroundLabel);
 		
 	}
 	
+	// This method reads the level from a file
 	private void loadBoard(String filePath) {
 		
 		// Declaring the row variable to keep track of the row number while traversing the file
@@ -72,19 +80,36 @@ public class Board extends JPanel implements ActionListener {
 				// Iterate through every character in the current row
 				for (int column = 0; column < lineArray.length; column++) {
 					
+					// Set the matrix char to the line char
 					levelMatrix[row][column] = lineArray[column];
 					
-					// Set the collision
+					// Check if current char is player
 					if (lineArray[column] == CAIApplication.ID_PLAYER) {
 						
-						if (level == 1) {
-
-							player = new Mover(column, row, 3);
+						// Declare direction variable
+						int dir = 3;
+							
+						// Change dir according to the current level
+						switch (CAIApplication.activityLevel) {
+						case 1:
+							dir = 3;
+							break;
+						case 2:
+							dir = 1;
+							break;
+						}
+						
+						// Check if player doesn't exist yet
+						if (player == null) {
+							
+							// Add a new player
+							player = new Mover(column, row, dir);
 							add(player);
 							
-						} else if (level == 2){
+						} else {
 							
-							player.setNewSpawn(column, row, 1);
+							// Set the preexisting player
+							player.setNewSpawn(column, row, dir);
 							
 						}
 						
@@ -109,84 +134,110 @@ public class Board extends JPanel implements ActionListener {
 		
 	}
 	
+	// This method loads the level image
 	public void loadLevel() {
 		
-		loadBoard("levels/level_" + level + ".txt");
+		// Load the board first
+		loadBoard("levels/level_" + CAIApplication.activityLevel + ".txt");
 		
-		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[level - 1], WIDTH, HEIGHT));
+		// Set the background image
+		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[CAIApplication.activityLevel - 1], WIDTH, HEIGHT));
 		
 	}
 
+	// This method runs the command deque
 	public void run(Deque<Integer> commandsQueue) {
 		
-		System.out.println(player.getNextRow() + " " + player.getNextColumn());
-		
+		// Set the deque field
 		this.commandsQueue = commandsQueue;
 		
+		// Commence the first command
 		nextCommand();
 
+		// Start the run timer
 		runTimer.start();
 		
 	}
-
+	
+	// This method starts the next command
 	private void nextCommand() {
 		
+		// Get the next command id
 		int command = commandsQueue.poll();
 		
+		// Check if the command is to rotate clockwise
 		if (command == -2) {
 			
 			player.rotateClockwise();
 			
+		// Check if the command is the rotate counter clockwise
 		} else if (command == -1) {
 		
 			player.rotateCounterClockwise();
 			
-		} else if (command < 12 && player.getNextColumn() > 0 && player.getNextRow() > 0 && 
+		// Check if the player is able to move to the next column
+		} else if (player.getNextColumn() > 0 && player.getNextRow() > 0 && 
 				player.getNextColumn() < CAIApplication.COLUMNS && player.getNextRow() < CAIApplication.ROWS){
 			
+			// Check if the player reaches the finish
 			if (levelMatrix[player.getNextRow()][player.getNextColumn()] == CAIApplication.ID_FINISH) {
 				
+				// Disable the run button
 				frame.enableAll(false);
 				
-				level++;
+				// Increase the level
+				CAIApplication.activityLevel++;
 
-				Utility.createQuickDialogue(frame, frame.getCurrIndexButton(), "yay you won!", Icons.BASIL_NEUTRAL);
+				// Create a quick dialogue
+				Utility.createQuickDialogue(frame, frame.getCurrIndexButton(), "yay you won!", Icons.BASIL_PROFILE[1]);
 				
+				// Reset the player image to idle
 				player.updateSprite();
 				
+				// Stop the run timer
 				runTimer.stop();
 
+				// Set the finished variable to true
 				isFinished = true;
 				
 			}
+			
+			// Check if the next space is not a wall
 			else if (levelMatrix[player.getNextRow()][player.getNextColumn()] != CAIApplication.ID_WALL)
 				player.move();
 
+			// Check if there are more move commands
 			if (command > 1) 
-				commandsQueue.addFirst(command - 1);
+				commandsQueue.addFirst(command - 1); // Decrease the move command by one
 			
 		}
 		
 	}
 	
+	// This method is called when an action is performed
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
+		// Get the source of the action
 		if (e.getSource() == runTimer) {
 			
+			// Check if there are no more commands
 			if (commandsQueue.isEmpty()) {
 
 				player.updateSprite();
 				runTimer.stop();
-				endTimer.start();
-				return;
-				
-			}
+				endTimer.start(); // Start the end timer
+
+			// Otherwise, run the next command
+			} else {
 			
-			nextCommand();
+				nextCommand();
+			
+			}
 			
 		} else if (e.getSource() == endTimer) {
 			
+			// Enable the run button and reset the board
 			frame.enableAll(true);
 			endTimer.stop();
 			player.reset();
@@ -195,6 +246,7 @@ public class Board extends JPanel implements ActionListener {
 		
 	}
 	
+	// Getter for is finished
 	public boolean isFinished() {
 		return isFinished;
 	}

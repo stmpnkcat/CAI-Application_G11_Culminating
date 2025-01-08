@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -5,7 +7,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /*
  * This class creates the concepts page
@@ -18,15 +24,20 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 	private JPanel profilePanel;
 	private JPanel namePanel;
 	private JPanel dialoguePanel;
+
+	// Declare the index button, which is used for retrieving the dialogue number
+	private JButton currDialogue = new JButton(CAIApplication.conceptsLevel+"");
 	
 	// Declare the back panel for the back button
 	private JPanel backPanel;
-
-	// Declare the index button, which is used for retrieving the dialogue number
-	private JButton currIndexButton = new JButton("0");
 	
-	// Declare the lists to store dialogue information
-	private ArrayList<JPanel> diagramList = new ArrayList<>();
+	private JPanel topicPanel = new JPanel();
+	private JLabel topicLabel = new JLabel();
+	
+	// Declare list for the components
+	private ArrayList<Component> compList = new ArrayList<>();
+	
+	// Declare lists for dialogue information
 	private ArrayList<String> textList = new ArrayList<>();
 	private ArrayList<ImageIcon> iconList = new ArrayList<>();
 	
@@ -41,11 +52,12 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 		fillLists();
 		
 		// Create a new dialogue with the filled lists
-		Dialogue dialogue = new Dialogue(textList, iconList, currIndexButton);
+		Dialogue dialogue = new Dialogue(textList, iconList, currDialogue);
+		dialogue.setCurrDialogue(CAIApplication.conceptsLevel);
 		
 		// Add action listener to the index button to allow for detecting if the dialogue changes
-		currIndexButton.addActionListener(this);
-		currIndexButton.doClick(); // Activate the button to process the first dialogue
+		currDialogue.addActionListener(this);
+		currDialogue.doClick(); // Activate the button to process the first dialogue
 		
 		// Set the panels using the dialogue created
 		profilePanel = dialogue.getProfilePanel();
@@ -55,8 +67,24 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 		// Create the back panel using utility class
 		backPanel = Utility.createBackPanel(this);
 		
+		// Create the back panel
+		backPanel.setBounds(0, 0, 300, 100);
+		add(backPanel);
+		
+		// Format topic panel
+		Utility.formatPanel(topicPanel);
+		
+		// Add topic text
+		topicLabel.setForeground(Color.WHITE);
+		topicLabel.setFont(Fonts.dialogue);
+		topicPanel.add(topicLabel);
+
+		// Add topic panel
+		topicPanel.setBounds(1075, 50, 300, 70);
+		add(topicPanel);
+		
 		// Create the profile panel
-		profilePanel.setBounds(1200, 200, 170, 170);
+		profilePanel.setBounds(1205, 200, 170, 170);
 		add(profilePanel);
 		
 		// Create the name panel
@@ -66,10 +94,6 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 		// Create the dialogue panel
 		dialoguePanel.setBounds(25, 400, 1350, 300);
 		add(dialoguePanel);
-		
-		// Create the dialogue panel
-		backPanel.setBounds(0, 0, 300, 100);
-		add(backPanel);
 		
 		// Show the frame
 		setVisible(true);
@@ -104,14 +128,12 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 				// Get the current line
 				String line = inputFile.nextLine();
 				
-				// Check if the line is a seperator, meaning this is the end of the current dialogue
+				// Check if the line is a separator, meaning this is the end of the current dialogue
 				if (line.indexOf(CAIApplication.ID_SEPARATOR) == 0){
 					
-					// Get the profile id
-					int profileID = Integer.parseInt(""+line.charAt(CAIApplication.ID_SEPARATOR.length()));
-					
-					// Match the profile id
-					currIcon = matchId(profileID);
+					// Get the profile id and set the icon
+					int profileID = Integer.parseInt(""+line.charAt(1));
+					currIcon = Icons.BASIL_PROFILE[profileID];
 					
 					// Add the text and icon to the lists
 					textList.add(currText);
@@ -145,19 +167,22 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 		
 	}
 	
-	// This method matches the id given with a profile icon
-	private ImageIcon matchId(int id) {
+	private void createDiagram(ImageIcon icon, int x, int y, int width, int height) {
+
+		// Create the diagram panel to hold the diagram
+		JPanel diagramPanel = new JPanel();
+		diagramPanel.setOpaque(false);
 		
-		// Get the according image icon
-		switch(id) {
-			case CAIApplication.ID_NEUTRAL:
-				return Icons.BASIL_NEUTRAL;
-			case CAIApplication.ID_ANGRY:
-				return Icons.BASIL_ANGRY;
-		}
+		// Create the diagram label image
+		diagramPanel.add(new JLabel(icon));
 		
-		// If no image has been returned, return nothing
-		return null;
+		// Add the diagram panel
+		diagramPanel.setBounds(x, y, width, height);
+		add(diagramPanel);
+		
+		// Add the diagram panel to the diagram list to be later disposed of
+		compList.add(diagramPanel);
+		
 	}
 
 	// This method is called whenever an action is performed
@@ -165,59 +190,69 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		
 		// Check which action was performed
-		if (e.getSource() == currIndexButton) {
+		if (e.getSource() == currDialogue) {
 			
-			// Remove every diagram because they were from the previous dialogue
-			for (JPanel panel : diagramList) {
+			// Remove every component because they were from the previous dialogue
+			for (Component comp : compList) {
 				
 				// Remove it
-				panel.setVisible(false);
-				panel.setEnabled(false);
-				remove(panel);
+				comp.setVisible(false);
+				comp.setEnabled(false);
+				remove(comp);
 				
 			}
 			
 			// Get the current dialogue number
-			int currIndex = Integer.parseInt(currIndexButton.getText());
+			int dialogueNum = Integer.parseInt(currDialogue.getText());
+			
+			// Save user progress
+			CAIApplication.conceptsLevel = dialogueNum;
 			
 			// Check which dialogue number it is on (0-indexed)
-			switch (currIndex) {
+			switch (dialogueNum) {
 			
-				// No more dialogue left
-				case -1:
-					
-					// Close the frame and go back to title page
-					dispose();
-					new TitleFrame();
-					
-				// Dialogue 1
-				case 1:
-					
-					// Create the diagram panel to hold the diagram
-					JPanel diagramPanel = new JPanel();
-					diagramPanel.setOpaque(false);
-					
-					// Create the diagram label image
-					JLabel diagramLabel = new JLabel(Icons.DIAGRAM_1);
-					diagramPanel.add(diagramLabel);
-					
-					// Add the diagram panel
-					diagramPanel.setBounds(300, 150, 500, 500);
-					add(diagramPanel);
-					
-					// Add the diagram panel to the diagram list to be later disposed of
-					diagramList.add(diagramPanel);
-					
-					// Break out of switch statement
-					break;
-					
-				case 2:
-					
-			
+			// No more dialogue left
+			case -1:
+				
+				// Close the frame and go back to title page
+				dispose();
+				new TitleFrame();
+				break;
+				
+			// Dialogue 1
+			case 1:
+				
+				// Set the topic title
+				topicLabel.setText("Introduction");
+				break;
+				
+			// Dialogue 2
+			case 2:
+				
+				topicLabel.setText("Modularization");
+				break;
+				
+			// Dialogue 3
+			case 3:
+				
+				createDiagram(Icons.DIAGRAM_HIERARCHY, 400, 100, 500, 500);
+				
+				// Break out of switch statement
+				break;
+				
+			case 6:
+
+				createDiagram(Icons.DIAGRAM_MATH, 400, 100, 500, 500);
+				
+				// Break out of switch statement
+				break;
+				
 			}
 			
 		}
 		
 	}
+	
+	
 	
 }

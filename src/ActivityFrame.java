@@ -32,7 +32,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 	private JButton currIndexButton;
 	
 	// Create a new board
-	private Board board = new Board(this);
+	private Board board;
 	
 	// This constructor is called when a new activity frame is created
 	public ActivityFrame() {
@@ -40,6 +40,9 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		// Format the frame
 		Utility.formatFrame(this);
 		setLayout(null);
+		
+		// Create the board
+		board = new Board(this);
 		
 		// Add the board
 		board.setBounds(50, 105, CAIApplication.COLUMNS * CAIApplication.TILE_SIZE + 10, 
@@ -77,7 +80,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		
 		// Create the run label
 		runLabel = new JLabel("RUN");
-		runLabel.setFont(Fonts.button);
+		runLabel.setFont(Fonts.button2);
 		
 		// Add the run label
 		runPanel.add(runLabel);
@@ -214,7 +217,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, maybe you put letters instead of numbers in the move arguments?", Icons.BASIL_ANGRY);
+				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, maybe you put letters instead of numbers in the move arguments?", Icons.BASIL_PROFILE[2]);
 				
 				break;
 				
@@ -224,7 +227,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, i think you need to put arguments in the move command.", Icons.BASIL_ANGRY);
+				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, i think you need to put arguments in the move command.", Icons.BASIL_PROFILE[2]);
 				
 				break;
 				
@@ -234,7 +237,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, maybe you made a typo or something.", Icons.BASIL_ANGRY);
+				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, maybe you made a typo or something.", Icons.BASIL_PROFILE[2]);
 				
 				break;
 			

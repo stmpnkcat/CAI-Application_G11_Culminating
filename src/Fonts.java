@@ -9,14 +9,12 @@ import java.io.IOException;
  * It has to set the font size for those classes to use
  */
 public class Fonts {
-
-	// Declare custom fonts
-	public static Font handwriting;
 	
 	// Declare fonts
 	public static Font header;
 	public static Font title;
 	public static Font button;
+	public static Font button2;
 	public static Font rb;
 	public static Font name;
 	public static Font dialogue;
@@ -24,6 +22,9 @@ public class Fonts {
 	
 	// This method creates the fonts and is called at the start of the program
 	public static void createFonts () {
+
+		// Declare custom fonts
+		Font handwriting = null;
 		
 		// Try/Catch for reading the file
 		// https://stackoverflow.com/questions/5652344/how-can-i-use-a-custom-font-in-java
@@ -51,10 +52,11 @@ public class Fonts {
 		// Create the fonts
 		header = new Font(Font.MONOSPACED, Font.PLAIN, 40);
 		title = handwriting.deriveFont(200f);
-		button = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
+		button = handwriting.deriveFont(40f);
+		button2 = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
 		rb = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
-		name = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
-		dialogue = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+		name = new Font("Comic Sans MS", Font.PLAIN, 30);
+		dialogue = new Font("Comic Sans MS", Font.PLAIN, 20);
 		code = new Font(Font.MONOSPACED, Font.PLAIN, 15);
 		
 	}

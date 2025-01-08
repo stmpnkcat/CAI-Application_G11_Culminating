@@ -22,6 +22,9 @@ public class TitleFrame extends JFrame implements ActionListener{
 	private JButton activityButton;
 	private JButton assessmentButton;
 	private JButton exitButton;
+	
+	// Declare the starting level
+	private int activityLevel = 1;
 
 	// The constructor called when the frame is created
 	public TitleFrame() {
@@ -33,16 +36,18 @@ public class TitleFrame extends JFrame implements ActionListener{
 		// Create the header label
 		headerLabel = new JLabel("A Modular Programming CAI: ");
 		headerLabel.setFont(Fonts.header);
-		headerLabel.setForeground(Color.BLACK);
+		headerLabel.setForeground(Color.WHITE);
 		
+		// Add the header label
 		headerLabel.setBounds(250, -100, 1440, 300);
 		add(headerLabel);
 		
 		// Create the title label
 		titleLabel = new JLabel("METHODS");
 		titleLabel.setFont(Fonts.title);
-		titleLabel.setForeground(Color.BLACK);
+		titleLabel.setForeground(Color.WHITE);
 		
+		// Add the title label
 		titleLabel.setBounds(50, -120, 1440, 400);
 		add(titleLabel);
 		
@@ -52,34 +57,34 @@ public class TitleFrame extends JFrame implements ActionListener{
 		
 		// Create the concepts button
 		conceptsButton = new JButton("CONCEPTS");
-		Utility.formatButton(conceptsButton);
+		Utility.formatTitleButton(conceptsButton);
 		conceptsButton.addActionListener(this);
 		
 		buttonPanel.add(conceptsButton);
 		
 		// Create the activity button
 		activityButton = new JButton("ACTIVITY");
-		Utility.formatButton(activityButton);
+		Utility.formatTitleButton(activityButton);
 		activityButton.addActionListener(this);
 		
 		buttonPanel.add(activityButton);
 		
 		// Create the assessment button
 		assessmentButton = new JButton("ASSESSMENT");
-		Utility.formatButton(assessmentButton);
+		Utility.formatTitleButton(assessmentButton);
 		assessmentButton.addActionListener(this);
 		
 		buttonPanel.add(assessmentButton);
 		
 		// Create the exit button
 		exitButton = new JButton("EXIT");
-		Utility.formatButton(exitButton);
+		Utility.formatTitleButton(exitButton);
 		exitButton.addActionListener(this);
 		
 		buttonPanel.add(exitButton);
 		
 		// Create the button panel
-		buttonPanel.setBounds(1000, 400, 300, 500);
+		buttonPanel.setBounds(1000, 350, 350, 500);
 		add(buttonPanel);
 		
 		// Showing the frame
