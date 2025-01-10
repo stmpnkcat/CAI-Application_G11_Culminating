@@ -1,39 +1,43 @@
-Welcome to Modular Programming: Methods !
+Welcome to Modular Programming: Methods!
 ~1
 Methods are blocks of code that perform a specific task. 
 They allow us to reuse code, improving efficiency and organization. 
-To create a method, you need an access modifier, return time, method name, and a list of parameters.
+~0
+To create a method, you need an access modifier, return type, method name, and a list of parameters.
 The diagram above shows an example of a method. 
 ~0
 Methods help you modularize a program by separating its tasks into self-contained units. 
-Statements in method bodies are written only once, meaning there is no repeated code. 
-Code inside methods are hidden from other methods. 
-Methods can be reused from other locations in the program. 
-~2
-Methods offer a "Divide and Conquer" approach. 
+Statements in method bodies are written only once, meaning there is no repeated code.
+This allows methods to be reused from other locations in the program. 
+~0
 Programs are constructed using many of these methods. 
 Existing methods can be used as building blocks to create new programs. 
 This allows for easier debugging and maintenance. 
-~3
+~0
 Methods are a hierarchical form of management. 
 An example to explain this is a boss (caller) asking a worker (method) to perform a task and return the results. 
+~0
 The boss does not know how the worker method performed its tasks. 
 The worker can also call other worker methods to complete the tasks. 
 ~0
 Static methods are methods that perform a task that does not depend on the contents of any objects. 
 These methods apply to the class in which it is declared as a whole. 
+~0
 Static methods are often used to perform common tasks. 
 To declare a static method, use the keyword "static" before the return type during declaration. 
+~0
 An example of this is in the Math class, which provides many static methods to perform common calculations. 
+See the above diagram.
 ~0
 Methods with multiple parameters are specified in a comma-separated list. 
 When a method is called, there must be one argument specified for each parameter in the method declaration.
 ~0
 There are three ways to call a method: Using the method name to call a method or itself if it is in the same class, 
-using a variable with a reference to an object, then a dot, and the method name to call the method of the object, 
+using a variable with a reference to an object, then a dot, and the method name to call the method of the object, and
 using a class name and a dot to call the static method of the class. 
+~0
 Also, a non-static method can call any method in its class, 
-but a static method can only call static methods and non-static methods only if a reference to an object is provided 
+but a static method can only call static methods and non-static methods only if a reference to an object is provided. 
 ~0
 A method will return control to where it was called when it has no more code to execute (reaches method-ending right brace). 
 "return" will also return control, and if the method returns a value, a value or expression can be placed after "return". 
@@ -46,5 +50,5 @@ Method overloading is where multiple methods of the same name are declared in th
 The signature of a method is the name, type, and order of their parameters. 
 Overloaded methods most have different signatures or else a compilation error will occur. 
 ~0
-the end
-~0
+And thats it! Now that you have learned Java methods, you can check out the activity or the assessment.
+~1

@@ -60,7 +60,7 @@ public class Utility {
 		frame.setSize(CAIApplication.SCREEN_WIDTH, CAIApplication.SCREEN_HEIGHT); // Set the size
 		frame.setTitle("Modular Programming - Methods"); // Set the title
 		frame.setIconImage(Icons.LOGO.getImage()); // Set the logo
-		frame.getContentPane().setBackground(new Color(0, 50, 50)); // Set the background color
+		frame.getContentPane().setBackground(new Color(200, 255, 200)); // Set the background color
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set the frame to close when the program ends
 		frame.setResizable(false); // Stop the frame from being resized
 		
@@ -84,7 +84,7 @@ public class Utility {
 		button.setBackground(new Color(0, 50, 50));
 		
 		// Create the border for the button
-		Border empty = BorderFactory.createEmptyBorder(0, 40, 35, 40);
+		Border empty = BorderFactory.createEmptyBorder(0, 25, 25, 25);
 
 		Border line = BorderFactory.createLineBorder(Color.BLACK, 1);
 		Border line2 = BorderFactory.createLineBorder(Color.white, 5);
@@ -104,8 +104,8 @@ public class Utility {
 		
 		// Change the button's appearance
 		button.setFont(Fonts.button);
-		button.setForeground(Color.BLACK);
-		button.setBackground(Color.white);
+		button.setForeground(Color.WHITE);
+		button.setBackground(Color.BLACK);
 		
 		button.setOpaque(false);
 		button.setBorderPainted(false);
@@ -118,7 +118,7 @@ public class Utility {
 		textArea.setFont(Fonts.code);
 		textArea.setRows(5);
 		textArea.setCaretColor(Color.WHITE);
-		textArea.setBackground(Color.BLACK);
+		textArea.setBackground(new Color(0, 50, 50));
 		textArea.setForeground(Color.WHITE);
 		textArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE, 1), 
 				BorderFactory.createEmptyBorder(5,5,5,5)));
@@ -140,10 +140,13 @@ public class Utility {
 	// This method formats the text field given
 	public static void formatTextField(JTextField tf) {
 		
-		tf.setFont(Fonts.rb);
+		tf.setFont(Fonts.dialogue);
 		tf.setForeground(Color.WHITE);
-		tf.setBackground(Color.BLACK);
-		tf.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1)); // Create outline border
+		tf.setBackground(new Color(0, 50, 50));
+		tf.setCaretColor(Color.WHITE);
+		tf.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(Color.WHITE, 1),
+				BorderFactory.createEmptyBorder(0, 10, 0, 0))); // Create outline border
 		
 	}
 	
@@ -176,6 +179,7 @@ public class Utility {
 		
 		// Create the back label
 		JLabel backLabel = new JLabel("BACK");
+		backLabel.setForeground(Color.BLACK);
 		backLabel.setFont(Fonts.button2);
 		
 		// Add the back label
@@ -187,7 +191,7 @@ public class Utility {
 	}
 
 	// This method creates a quick one line dialogue
-	public static void createQuickDialogue(JFrame frame, JButton currIndexButton, String text, ImageIcon profile) {
+	public static Dialogue createQuickDialogue(JFrame frame, JButton currIndexButton, String text, ImageIcon profile) {
 		
 		// Create lists
 		ArrayList<String> dialogueList = new ArrayList<>();
@@ -214,6 +218,8 @@ public class Utility {
 		frame.add(profilePanel);
 		frame.add(namePanel);
 		frame.add(dialoguePanel);
+		
+		return dialogue;
 		
 	}
 	

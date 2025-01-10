@@ -52,7 +52,7 @@ public class Fonts {
 		// Create the fonts
 		header = new Font(Font.MONOSPACED, Font.PLAIN, 40);
 		title = handwriting.deriveFont(200f);
-		button = handwriting.deriveFont(40f);
+		button = handwriting.deriveFont(30f);
 		button2 = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
 		rb = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 		name = new Font("Comic Sans MS", Font.PLAIN, 30);

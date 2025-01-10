@@ -21,8 +21,14 @@ public class Icons {
 	public static final ImageIcon ARROW_RIGHT = new ImageIcon("images/arrow_right.gif");
 	
 	// Diagram icons
-	public static final ImageIcon DIAGRAM_HIERARCHY = new ImageIcon("images/hierarchy.png");
-	public static final ImageIcon DIAGRAM_MATH = new ImageIcon("images/math.png");
+	public static final ImageIcon DIAGRAM_HIERARCHY = new ImageIcon("images/diagram_hierarchy.png");
+	public static final ImageIcon DIAGRAM_MATH = new ImageIcon("images/diagram_math.png");
+	public static final ImageIcon DIAGRAM_EXAMPLE = new ImageIcon("images/diagram_example.png");
+	public static final ImageIcon DIAGRAM_PARAMETERS = new ImageIcon("images/diagram_parameters.png");
+	public static final ImageIcon DIAGRAM_RETURNING = new ImageIcon("images/diagram_returning.png");
+	public static final ImageIcon DIAGRAM_CALLSTACK = new ImageIcon("images/diagram_callstack.png");
+	public static final ImageIcon DIAGRAM_OVERLOADING = new ImageIcon("images/diagram_overloading.png");
+	public static final ImageIcon DIAGRAM_SYNTAX = new ImageIcon("images/diagram_syntax.png");
 	
 	// Code icon
 	public static final ImageIcon TEMPLATE_CODE = new ImageIcon("images/template_code.png");
@@ -39,6 +45,8 @@ public class Icons {
 			new ImageIcon("images/basil_idle_up.png"),
 			new ImageIcon("images/basil_idle_right.png"),
 			new ImageIcon("images/basil_idle_down.png")};
+	
+	public static final ImageIcon BASIL_PLUSH = new ImageIcon("images/basil_plush.png");
 	
 	// Level icons
 	public static final ImageIcon[] LEVEL = 

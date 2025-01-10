@@ -219,32 +219,109 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 				new TitleFrame();
 				break;
 				
-			// Dialogue 1
-			case 1:
+			// Dialogue 0
+			case 0:
+				
+			case 1: // extends onto dialogue 1
 				
 				// Set the topic title
 				topicLabel.setText("Introduction");
+				
+				// Break out of the switch
 				break;
 				
 			// Dialogue 2
 			case 2:
+
+				// Set the topic title
+				topicLabel.setText("Introduction");
 				
-				topicLabel.setText("Modularization");
+				// Create the diagram image
+				createDiagram(Icons.DIAGRAM_EXAMPLE, 300, 200, 850, 150);
 				break;
 				
 			// Dialogue 3
 			case 3:
 				
-				createDiagram(Icons.DIAGRAM_HIERARCHY, 400, 100, 500, 500);
+			case 4:
 				
-				// Break out of switch statement
+				topicLabel.setText("Modularization");
 				break;
 				
-			case 6:
-
-				createDiagram(Icons.DIAGRAM_MATH, 400, 100, 500, 500);
+			// Dialogue 5
+			case 5:
 				
-				// Break out of switch statement
+				topicLabel.setText("Modularization");
+				
+				createDiagram(Icons.DIAGRAM_HIERARCHY, 400, 100, 500, 500);
+				break;
+				
+			// Dialogue 6
+			case 6:
+				
+				topicLabel.setText("Modularization");
+
+				createDiagram(Icons.DIAGRAM_HIERARCHY, 400, 100, 500, 500);
+				break;
+			
+			// Dialogue 7
+			case 7:
+				
+				topicLabel.setText("Static Methods");
+				break;
+				
+			// Dialogue 8
+			case 8:
+				
+				topicLabel.setText("Static Methods");
+				
+				createDiagram(Icons.DIAGRAM_MATH, 400, 100, 570, 570);
+				break;
+				
+			// Dialogue 9
+			case 9:
+				
+			case 10:
+				
+				topicLabel.setText("Multiple Parameters");
+				
+				createDiagram(Icons.DIAGRAM_PARAMETERS, 370, 70, 760, 330);
+				break;
+				
+			// Dialogue 11
+			case 11:
+				
+			case 12:
+				topicLabel.setText("Calling a Method");
+				break;
+				
+			// Dialogue 13
+			case 13:
+				
+				topicLabel.setText("Returning");
+				
+				createDiagram(Icons.DIAGRAM_RETURNING, 350, 70, 600, 500);
+				break;
+				
+			case 14:
+				
+				topicLabel.setText("Method Call Stack");
+				
+				createDiagram(Icons.DIAGRAM_CALLSTACK, 400, 50, 500, 500);
+				break;
+				
+			// Dialogue 15
+			case 15:
+				
+				topicLabel.setText("Overloading");
+				
+				createDiagram(Icons.DIAGRAM_OVERLOADING, 370, 80, 530, 200);
+				break;
+				
+			// Dialogue 16
+			case 16:
+				
+				topicLabel.setText("Conclusion");
 				break;
 				
 			}

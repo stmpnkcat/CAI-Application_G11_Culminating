@@ -55,6 +55,7 @@ public class CAIApplication {
 	// Variables to hold the progress of the user
 	public static int conceptsLevel = 0;
 	public static int activityLevel = 1;
+	public static int assessmentLevel = 0;
 
 	// Main method called when program is run
 	public static void main (String args[]) {

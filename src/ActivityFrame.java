@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayDeque;
@@ -80,6 +81,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		
 		// Create the run label
 		runLabel = new JLabel("RUN");
+		runLabel.setForeground(Color.BLACK);
 		runLabel.setFont(Fonts.button2);
 		
 		// Add the run label

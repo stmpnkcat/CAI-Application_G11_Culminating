@@ -1,4 +1,6 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,6 +15,8 @@ public class TitleFrame extends JFrame implements ActionListener{
 	// Declare the swing components
 	private JLabel headerLabel;
 	private JLabel titleLabel;
+	
+	private JLabel imageLabel;
 	
 	// Declare the button panel
 	private JPanel buttonPanel;
@@ -36,23 +40,24 @@ public class TitleFrame extends JFrame implements ActionListener{
 		// Create the header label
 		headerLabel = new JLabel("A Modular Programming CAI: ");
 		headerLabel.setFont(Fonts.header);
-		headerLabel.setForeground(Color.WHITE);
+		headerLabel.setForeground(new Color(0, 50, 50));
 		
 		// Add the header label
-		headerLabel.setBounds(250, -100, 1440, 300);
+		headerLabel.setBounds(400, -100, 1440, 300);
 		add(headerLabel);
 		
 		// Create the title label
 		titleLabel = new JLabel("METHODS");
 		titleLabel.setFont(Fonts.title);
-		titleLabel.setForeground(Color.WHITE);
+		titleLabel.setForeground(new Color(0, 50, 50));
 		
 		// Add the title label
-		titleLabel.setBounds(50, -120, 1440, 400);
+		titleLabel.setBounds(300, -120, 1440, 400);
 		add(titleLabel);
 		
 		// Set the background of the panel
 		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 0));
 		buttonPanel.setOpaque(false);
 		
 		// Create the concepts button
@@ -84,8 +89,12 @@ public class TitleFrame extends JFrame implements ActionListener{
 		buttonPanel.add(exitButton);
 		
 		// Create the button panel
-		buttonPanel.setBounds(1000, 350, 350, 500);
+		buttonPanel.setBounds(100, 650, 1200, 100);
 		add(buttonPanel);
+		
+		imageLabel = new JLabel(Icons.BASIL_PLUSH);
+		imageLabel.setBounds(350, 100, 847, 1031);
+		add(imageLabel);
 		
 		// Showing the frame
 		setVisible(true);

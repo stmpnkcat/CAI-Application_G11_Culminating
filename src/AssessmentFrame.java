@@ -1,26 +1,11 @@
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class AssessmentFrame extends JFrame implements ActionListener{
-	
-	// Create the panels
-	private JPanel profilePanel;
-	private JPanel namePanel;
-	private JPanel dialoguePanel;
-
-	// Create the dialogue
-	private Dialogue dialogue;
 
 	// Create the index button
 	private JButton currDialogue = new JButton("0");
@@ -30,18 +15,25 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 
 	// Create lists for the components
 	private ArrayList<Component> compList = new ArrayList<>();
-	
-	// Create lists for the dialogue content
-	private ArrayList<String> textList = new ArrayList<>();
-	private ArrayList<ImageIcon> iconList = new ArrayList<>();
 
-	private final String[] answers = {"1", "wasd"};
+	// Create answers list
+	private final String[] ANSWERS = {"1", "1", "4", "HIERARCHICAL"};
 	
 	// Create array for the selected options
-	private JTextField[] selectedArray = new JTextField[answers.length];
+	private JTextField[] selectedArray = new JTextField[ANSWERS.length];
 	
-	// Create variable for if it is finished
-	private boolean isFinished = false;
+	private int score;
+	
+	// Create variable for the state
+	private State dialogueState;
+	
+	// https://www.w3schools.com/java/java_enums.asp
+	// Create the state enum
+	enum State{
+		FINISHED,
+		QUESTION,
+		FEEDBACK
+	}
 	
 	// This constructor is called when a new assessment frame is created
 	public AssessmentFrame() {
@@ -50,40 +42,21 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		Utility.formatFrame(this);
 		setLayout(null);
 		
-		// Fill the dialogue lists
-		fillLists();
-
-		// Fill the selected array
-		for (int index = 0; index < answers.length; index++) {
+		currDialogue.addActionListener(this);
+		
+		for (int index = 0; index < ANSWERS.length; index++) {
 			selectedArray[index] = new JTextField();
 		}
 		
-		// Create the dialogue
-		dialogue = new Dialogue(textList, iconList, currDialogue);
+		Utility.createQuickDialogue(this, currDialogue, 
+				"Welcome to the Assessment, where you can test your knowledge in methods!", Icons.BASIL_PROFILE[1]);
 		
-		// Set up the current dialogue receiver
-		currDialogue.addActionListener(this);
-		currDialogue.doClick();
+		dialogueState = State.QUESTION;
 		
-		// Get each of the panels
-		profilePanel = dialogue.getProfilePanel();
-		namePanel = dialogue.getNamePanel();
-		dialoguePanel = dialogue.getDialoguePanel();
-		
-		// Create the back panel
-		backPanel = Utility.createBackPanel(this);
-		
-		// Set the bounds of each of the panels
-		profilePanel.setBounds(1200, 200, 170, 170);
-		namePanel.setBounds(25, 300, 200, 75);
-		dialoguePanel.setBounds(25, 400, 1350, 300);
-		
-		// Add each of the panels
-		add(profilePanel);
-		add(namePanel);
-		add(dialoguePanel);
-		
+		CAIApplication.assessmentLevel = 0;
+
 		// Add the back panel
+		backPanel = Utility.createBackPanel(this);
 		backPanel.setBounds(0, 0, 300, 100);
 		add(backPanel);
 		
@@ -93,7 +66,11 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 	}
 	
 	// This method creates the text field
-	private JTextField createTextField(final int questionIndex, int x, int y, int width, int height) {
+	private void createBlank(final int questionIndex, String text, int x, int y, int width, int height) {
+		
+		// Create the dialogue
+		Dialogue dialogue = Utility.createQuickDialogue(this, currDialogue, 
+				text, Icons.BASIL_PROFILE[0]);
 		
 		// Format the text field
 		JTextField textField = new JTextField();
@@ -106,12 +83,15 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		textField.setBounds(x,y,width,height);
 		dialogue.getDialoguePanel().add(textField);
 		
-		return textField;
+		selectedArray[questionIndex] = textField;
 		
 	}
 
 	// This method creates the options
-	private void createOptions(final int questionIndex, String... options) {
+	private void createOptions(final int questionIndex, String text, String... options) {
+		
+		Dialogue dialogue = Utility.createQuickDialogue(this, currDialogue, 
+				text, Icons.BASIL_PROFILE[0]);
 		
 		ButtonGroup group = new ButtonGroup();
 		
@@ -126,7 +106,6 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 			final int selectedNum = buttonNum;
 			optionButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("question index " + questionIndex + " selectedNum " + selectedNum);
 					selectedArray[questionIndex].setText(selectedNum+"");
 				}
 			});
@@ -136,21 +115,132 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 			compList.add(optionButton);
 			group.add(optionButton);
 
-			optionButton.setBounds(50, 100 + 30 * buttonNum, 200, 30);
+			optionButton.setBounds(50, 100 + 30 * buttonNum, 600, 30);
 			dialogue.getDialoguePanel().add(optionButton);
 			
 		}
 		
 	}
+	
+	private void createDiagram(ImageIcon icon, int x, int y, int width, int height) {
 
-	// This method fills the lists
-	private void fillLists() {
-
-		textList.add("What is a method?");
-		iconList.add(Icons.BASIL_PROFILE[0]);
+		// Create the diagram panel to hold the diagram
+		JPanel diagramPanel = new JPanel();
+		diagramPanel.setOpaque(false);
 		
-		textList.add("What is a method?");
-		iconList.add(Icons.BASIL_PROFILE[0]);
+		// Create the diagram label image
+		diagramPanel.add(new JLabel(icon));
+		
+		// Add the diagram panel
+		diagramPanel.setBounds(x, y, width, height);
+		add(diagramPanel);
+		
+		// Add the diagram panel to the diagram list to be later disposed of
+		compList.add(diagramPanel);
+		
+	}
+	
+	private void createNextQuestion() {
+		
+		dialogueState = State.FEEDBACK;
+		
+		switch (CAIApplication.assessmentLevel) {
+		case 0:
+			
+			createOptions(0, 
+					"What is a method in Java?",
+					"A data type", 
+					"A block of code that performs a specific task", 
+					"A data structure", 
+					"A way of doing something");
+			break;
+			
+		case 1:
+			
+			createDiagram(Icons.DIAGRAM_SYNTAX, 370, 100, 500, 500);
+			
+			createOptions(1,
+					"The syntax of the above diagram is CORRECT and no errors will occur. ",
+					"True",
+					"False");
+			break;
+			
+		case 2:
+			
+			createOptions(2, 
+					"What DON'T you need for a method in Java?", 
+					"Access modifier", 
+					"Return type",
+					"Method name",
+					"List of parameters",
+					"None of the above");
+			break;
+			
+		case 3:
+
+			createBlank(3, "Methods are a ______________ form of management.",
+					170, 20, 180, 50);
+			break;
+			
+		}
+		
+	}
+	
+	private void createFeedback() {
+		
+		dialogueState = State.QUESTION;
+		
+		System.out.println(selectedArray[CAIApplication.assessmentLevel].getText().replace(" ", ""));
+		System.out.println(ANSWERS[CAIApplication.assessmentLevel]);
+		
+		if (selectedArray[CAIApplication.assessmentLevel].getText().replace(" ", "")
+				.equalsIgnoreCase(ANSWERS[CAIApplication.assessmentLevel])) {
+			
+			Utility.createQuickDialogue(this, currDialogue, "Nice, you got it correct!", Icons.BASIL_PROFILE[1]);
+			score++;
+			
+		} else {
+			
+			String text = "";
+			
+			switch (CAIApplication.assessmentLevel) {
+			case 0:
+				text = "That's wrong, a method is a block of code that performs a specific task.";
+				break;
+			case 1:
+				text = "It would be FALSE because the method has a return type JLabel, and nothing was returned.";
+				break;
+			case 2:
+				text = "You need all of those, so the correct answer is None of the above.";
+				break;
+			case 3:
+				text = "Nope, methods are a HIERARCHICAL form of management.";
+				break;
+				
+			}
+
+			Utility.createQuickDialogue(this, currDialogue, text, Icons.BASIL_PROFILE[2]);
+		}
+		
+		CAIApplication.assessmentLevel++;
+		
+	}
+
+	private void createFinalFeedback() {
+	
+		dialogueState = State.FINISHED;
+		
+		if (score <= ANSWERS.length / 2) {
+			
+			Utility.createQuickDialogue(this, currDialogue, "You got " + score + 
+					" questions correct out of " + ANSWERS.length + ". You FAIL!", Icons.BASIL_PROFILE[3]);
+			
+		} else {
+			
+			Utility.createQuickDialogue(this, currDialogue, "You got " + score + 
+					" questions correct out of " + ANSWERS.length + ". You PASS!", Icons.BASIL_PROFILE[1]);
+			
+		}
 		
 	}
 	
@@ -170,47 +260,25 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 				
 			}
 			
-			// Get the current dialogue number
-			int dialogueNum = Integer.parseInt(currDialogue.getText());
-			
-			switch (dialogueNum) {
-			
-				case -1:
-					if (isFinished) {
-						
-						dispose();
-						new TitleFrame();
-						
-					} else {
+			if (dialogueState == State.FINISHED) {
+				
+				dispose();
+				new TitleFrame();
+				
+			} else if (CAIApplication.assessmentLevel >= ANSWERS.length) {
 
-						int numCorrect = 0;
-						for (int index = 0; index < selectedArray.length; index++) {
-							JTextField tf = selectedArray[index];
-							String text = tf.getText();
-							
-							if (text.equals(answers[index])) {
-								numCorrect++;
-							}
-						}
-						
-						Utility.createQuickDialogue(this, currDialogue, 
-								"you got " + numCorrect + " questions correct out of " + 
-						answers.length + " total questions correct. ", Icons.BASIL_PROFILE[1]);
-						
-						isFinished = true;
-						
-					}
-					break;
-				case 0:
-					createOptions(0, "A", "B", "C", "D");
-					break;
-				case 1:
-					selectedArray[1] = createTextField(1, 50, 100, 100, 30);
-					break;
-				case 2:
-					
+				createFinalFeedback();
+				
+			} else if (dialogueState == State.QUESTION){
+				
+				createNextQuestion();
+				
+			} else if (dialogueState == State.FEEDBACK) {
+				
+				createFeedback();
+				
 			}
-			
+
 		}
 		
 	}
