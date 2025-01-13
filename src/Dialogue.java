@@ -27,7 +27,9 @@ public class Dialogue extends JPanel implements ActionListener {
 	private JButton backButton = new JButton();
 	
 	// Create the timer for the typewriter effect
-	private Timer typewriterTimer = new Timer(CAIApplication.TYPEWRITER_DURATION, this);
+	private Timer typewriterTimer = new Timer(CAIApplication.DELAY_TYPEWRITER, this);
+	
+	private int typewriterTick = 0;
 	
 	// Create a variable to hold the current dialogue number
 	private int currDialogue = 0;
@@ -77,7 +79,7 @@ public class Dialogue extends JPanel implements ActionListener {
 		nameLabel.setFont(Fonts.name);
 		
 		// Add the name label
-		nameLabel.setBounds(40, 0, 200, 75);
+		nameLabel.setBounds(50, 0, 200, 75);
 		namePanel.add(nameLabel);
 		
 		// Create the dialogue panel
@@ -143,6 +145,8 @@ public class Dialogue extends JPanel implements ActionListener {
 		// If the typewriter timer goes off
 		if (e.getSource() == typewriterTimer) {
 			
+			typewriterTick++;
+			
 			// Check if the dialogue is done
 			if (charIndex >= dialogueList.get(currDialogue).length()) {
 
@@ -150,6 +154,9 @@ public class Dialogue extends JPanel implements ActionListener {
 				return;
 				
 			}
+			
+			if (typewriterTick % 2 == 0)
+				Utility.playSound("sounds/text.wav", false);
 			
 			// Add another character for the typewriter effect
 			// Put the character in between the <html> and the </html> so it can be formatted to line wrap automatically
@@ -162,6 +169,8 @@ public class Dialogue extends JPanel implements ActionListener {
 			
 		// Check if the back button is pressed
 		} else if (e.getSource() == backButton) {
+			
+			Utility.playSound("sounds/select.wav", false);
 
 			// Decrease the current index
 			currDialogue--;
@@ -182,6 +191,8 @@ public class Dialogue extends JPanel implements ActionListener {
 		
 		// Check if the next button is pressed
 		} else if (e.getSource() == nextButton) {
+			
+			Utility.playSound("sounds/select.wav", false);
 
 			// Check if there are still more content to show
 			if (charIndex < dialogueList.get(currDialogue).length()) {

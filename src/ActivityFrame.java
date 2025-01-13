@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,11 +30,13 @@ public class ActivityFrame extends JFrame implements ActionListener{
 	private JLabel runLabel;
 	private JButton runButton;
 	
-	// Declare the index button to store the current dialogue number
-	private JButton currIndexButton;
+	// Declare the current dialogue to store the current dialogue number
+	private JButton currDialogue;
 	
 	// Create a new board
 	private Board board;
+	
+	private Clip clip = null;
 	
 	// This constructor is called when a new activity frame is created
 	public ActivityFrame() {
@@ -41,6 +44,12 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		// Format the frame
 		Utility.formatFrame(this);
 		setLayout(null);
+		
+		// Create the index button, used for retrieving the dialogue number
+		currDialogue = new JButton();
+		currDialogue.addActionListener(this);
+		
+		Utility.createQuickDialogue(this, currDialogue, "Help me get to the picnic basket by calling methods in the editor!", Icons.BASIL_PROFILE[1]);
 		
 		// Create the board
 		board = new Board(this);
@@ -107,9 +116,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		backPanel.setBounds(0, 0, 300, 100);
 		add(backPanel);
 		
-		// Create the index button, used for retrieving the dialogue number
-		currIndexButton = new JButton();
-		currIndexButton.addActionListener(this);
+		enableAll(false);
 		
 		// Show the frame
 		setVisible(true);
@@ -122,6 +129,8 @@ public class ActivityFrame extends JFrame implements ActionListener{
 
 		// Check the action source
 		if (e.getSource() == runButton) {
+			
+			Utility.playSound("sounds/select.wav", false);
 			
 			// Disable to run button
 			runButton.setEnabled(false);
@@ -211,7 +220,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				
 				// Run the commands
 				board.run(commandsQueue);
-				break;
+				return;
 				
 			case -1: // Invalid: letters in argument
 				
@@ -219,7 +228,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, maybe you put letters instead of numbers in the move arguments?", Icons.BASIL_PROFILE[2]);
+				Utility.createQuickDialogue(this, currDialogue, "your code doesn't work, maybe you put letters instead of numbers in the move arguments?", Icons.BASIL_PROFILE[2]);
 				
 				break;
 				
@@ -229,7 +238,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, i think you need to put arguments in the move command.", Icons.BASIL_PROFILE[2]);
+				Utility.createQuickDialogue(this, currDialogue, "your code doesn't work, i think you need to put arguments in the move command.", Icons.BASIL_PROFILE[2]);
 				
 				break;
 				
@@ -239,16 +248,18 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currIndexButton, "your code doesn't work, maybe you made a typo or something.", Icons.BASIL_PROFILE[2]);
+				Utility.createQuickDialogue(this, currDialogue, "your code doesn't work, maybe you made a typo or something.", Icons.BASIL_PROFILE[2]);
 				
 				break;
 			
 			}
 			
-		} else if (e.getSource() == currIndexButton) {
+			Utility.playSound("sounds/buzzer.wav", false);
+			
+		} else if (e.getSource() == currDialogue) {
 			
 			// Get the current index
-			int currIndex = Integer.parseInt(currIndexButton.getText());
+			int currIndex = Integer.parseInt(currDialogue.getText());
 			
 			// Check if there are no more dialogue
 			if (currIndex == -1) {
@@ -256,7 +267,20 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				// Load the level if the board is finished
 				if (board.isFinished()) {
 					
-					board.loadLevel();
+					if (CAIApplication.activityLevel > 5) {
+						
+						Utility.createQuickDialogue(this, currDialogue, 
+								"Congrats! You finished the activity, you can play again or check out the assessment.", 
+								Icons.BASIL_PROFILE[1]);
+						
+						CAIApplication.activityLevel = 1;
+						
+					} else {
+
+						codeTextArea.setText("");
+						board.loadLevel();
+						
+					}
 					
 				}
 				
@@ -276,11 +300,22 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		codeTextArea.setEnabled(bool);
 		
 	}
-	
-	// This method returns the index button (used by other classes)
-	public JButton getCurrIndexButton() {
+
+	public JButton getCurrDialogue() {
 		
-		return currIndexButton;
+		return currDialogue;
+		
+	}
+	
+	public Clip getClip() {
+		return clip;
+	}
+	
+	public void setClip(String soundFile) {
+
+		if (clip != null)
+			clip.stop();
+		clip = Utility.playSound(soundFile, true);
 		
 	}
 	

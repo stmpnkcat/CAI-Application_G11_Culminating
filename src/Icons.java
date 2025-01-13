@@ -52,6 +52,8 @@ public class Icons {
 	public static final ImageIcon[] LEVEL = 
 		{new ImageIcon("images/level_1.png"), 
 			new ImageIcon("images/level_2.png"), 
-			new ImageIcon("images/level_3.png")};
+			new ImageIcon("images/level_3.png"),
+			new ImageIcon("images/level_4.png"),
+			new ImageIcon("images/level_5.png")};
 	
 }

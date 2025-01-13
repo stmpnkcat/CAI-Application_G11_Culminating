@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 
+import javax.sound.sampled.Clip;
 /*
  * 
  * Name: Daniel Cheng
@@ -35,7 +37,7 @@ public class CAIApplication {
 	public static final int SCREEN_HEIGHT = 810;
 
 	// Dialogue constants
-	public static final int TYPEWRITER_DURATION = 10;
+	public static final int DELAY_TYPEWRITER = 20;
 
 	// ConceptsFrame constants
 	public static final char ID_SEPARATOR = '~';
@@ -56,6 +58,8 @@ public class CAIApplication {
 	public static int conceptsLevel = 0;
 	public static int activityLevel = 1;
 	public static int assessmentLevel = 0;
+	
+	public static ArrayList<Clip> clipList = new ArrayList<>();
 
 	// Main method called when program is run
 	public static void main (String args[]) {

@@ -87,7 +87,7 @@ public class Board extends JPanel implements ActionListener {
 					if (lineArray[column] == CAIApplication.ID_PLAYER) {
 						
 						// Declare direction variable
-						int dir = 3;
+						int dir = 0;
 							
 						// Change dir according to the current level
 						switch (CAIApplication.activityLevel) {
@@ -95,7 +95,16 @@ public class Board extends JPanel implements ActionListener {
 							dir = 3;
 							break;
 						case 2:
+							dir = 3;
+							break;
+						case 3:
 							dir = 1;
+							break;
+						case 4:
+							dir = 2;
+							break;
+						case 5:
+							dir = 3;
 							break;
 						}
 						
@@ -137,11 +146,34 @@ public class Board extends JPanel implements ActionListener {
 	// This method loads the level image
 	public void loadLevel() {
 		
+		isFinished = false;
+		
 		// Load the board first
 		loadBoard("levels/level_" + CAIApplication.activityLevel + ".txt");
-		
+
 		// Set the background image
 		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[CAIApplication.activityLevel - 1], WIDTH, HEIGHT));
+		
+		String soundFile = "sounds/";
+		switch(CAIApplication.activityLevel) {
+		case(1):
+			soundFile += "Trees....wav";
+			break;
+		case(2):
+			soundFile += "Stardust Diving.wav";
+			break;
+		case(3):
+			soundFile += "I Definitely Promised You A Rose Garden.wav";
+			break;
+		case(4):
+			soundFile += "H20_HCL.wav";
+			break;
+		case(5):
+			soundFile += "Fade.wav";
+			break;
+		}
+
+		frame.setClip(soundFile);
 		
 	}
 
@@ -182,6 +214,8 @@ public class Board extends JPanel implements ActionListener {
 			// Check if the player reaches the finish
 			if (levelMatrix[player.getNextRow()][player.getNextColumn()] == CAIApplication.ID_FINISH) {
 				
+				Utility.playSound("sounds/save.wav", false);
+				
 				// Disable the run button
 				frame.enableAll(false);
 				
@@ -189,7 +223,7 @@ public class Board extends JPanel implements ActionListener {
 				CAIApplication.activityLevel++;
 
 				// Create a quick dialogue
-				Utility.createQuickDialogue(frame, frame.getCurrIndexButton(), "yay you won!", Icons.BASIL_PROFILE[1]);
+				Utility.createQuickDialogue(frame, frame.getCurrDialogue(), "yay you won!", Icons.BASIL_PROFILE[1]);
 				
 				// Reset the player image to idle
 				player.updateSprite();

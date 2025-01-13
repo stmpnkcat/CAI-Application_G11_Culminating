@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 public class AssessmentFrame extends JFrame implements ActionListener{
@@ -17,12 +18,14 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 	private ArrayList<Component> compList = new ArrayList<>();
 
 	// Create answers list
-	private final String[] ANSWERS = {"1", "1", "4", "HIERARCHICAL"};
+	private final String[] ANSWERS = {"1", "1", "4", "VOID", "HIERARCHICAL", "1", "2", "0", "3", "RETURN"};
 	
 	// Create array for the selected options
 	private JTextField[] selectedArray = new JTextField[ANSWERS.length];
 	
 	private int score;
+
+	private Clip clip = Utility.playSound("sounds/A Home for Flowers (Tulip).wav", true);
 	
 	// Create variable for the state
 	private State dialogueState;
@@ -57,6 +60,7 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 
 		// Add the back panel
 		backPanel = Utility.createBackPanel(this);
+		
 		backPanel.setBounds(0, 0, 300, 100);
 		add(backPanel);
 		
@@ -170,16 +174,66 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 			createOptions(2, 
 					"What DON'T you need for a method in Java?", 
 					"Access modifier", 
-					"Return type",
-					"Method name",
-					"List of parameters",
+					"Return type", 
+					"Method name", 
+					"List of parameters", 
 					"None of the above");
 			break;
 			
 		case 3:
 
-			createBlank(3, "Methods are a ______________ form of management.",
+			createBlank(3, "A method that does not return any value is declared with the return type ______.",
+					710, 20, 100, 50);
+			break;
+			
+		case 4:
+
+			createBlank(4, "Methods are a ______________ form of management.",
 					170, 20, 180, 50);
+			break;
+		
+		case 5:
+			
+			createOptions(5, 
+					"A static method can call ANY method in its class without restrictions.",
+					"True",
+					"False");
+			break;
+			
+		case 6:
+			
+			createOptions(6,
+					"Which of the following is true about static methods?",
+					"They require an object to be called",
+					"They cannot call other static methods",
+					"They belong to the class and not to an object",
+					"They are always private");
+			break;
+			
+		case 7:
+			
+			createOptions(7, 
+					"What happens if more method calls are made than can be stored in the program execution stack?",
+					"Stack overflow error",
+					"Compilation error",
+					"Null pointer exception",
+					"The method will not be called");
+			break;
+			
+		case 8:
+			
+			createOptions(8,
+					"Which of the following allows multiple methods with the same name in a class?",
+					"Method overriding",
+					"Private methods",
+					"Protected methods",
+					"Method overloading");
+			break;
+			
+		case 9:
+			
+			createBlank(9,"The ________ keyword is used to explicitly return a value from a method.",
+					70, 20, 100, 50);
 			break;
 			
 		}
@@ -190,11 +244,10 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		
 		dialogueState = State.QUESTION;
 		
-		System.out.println(selectedArray[CAIApplication.assessmentLevel].getText().replace(" ", ""));
-		System.out.println(ANSWERS[CAIApplication.assessmentLevel]);
-		
 		if (selectedArray[CAIApplication.assessmentLevel].getText().replace(" ", "")
 				.equalsIgnoreCase(ANSWERS[CAIApplication.assessmentLevel])) {
+			
+			Utility.playSound("sounds/save.wav", false);
 			
 			Utility.createQuickDialogue(this, currDialogue, "Nice, you got it correct!", Icons.BASIL_PROFILE[1]);
 			score++;
@@ -214,11 +267,30 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 				text = "You need all of those, so the correct answer is None of the above.";
 				break;
 			case 3:
+				text = "Wrong, a method that does not return any value is declared with return type VOID";
+				break;
+			case 4:
 				text = "Nope, methods are a HIERARCHICAL form of management.";
 				break;
-				
+			case 5:
+				text = "Incorrect, static methods can only call other static methods or non-static methods with a reference.";
+				break;
+			case 6:
+				text = "Static methods belong to a class and not to an object.";
+				break;
+			case 7:
+				text = "A stack overflow error will occur.";
+				break;
+			case 8:
+				text = "Method overiding allows multiple methods with the same name to be used in a class.";
+				break;
+			case 9:
+				text = "The RETURN keyword is used to explicitly return a value from a method.";
+				break;
+			
 			}
 
+			Utility.playSound("sounds/buzzer.wav", false);
 			Utility.createQuickDialogue(this, currDialogue, text, Icons.BASIL_PROFILE[2]);
 		}
 		
@@ -261,6 +333,10 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 			}
 			
 			if (dialogueState == State.FINISHED) {
+				
+				for (Clip clip : CAIApplication.clipList) {
+	        		clip.stop();
+	        	}
 				
 				dispose();
 				new TitleFrame();

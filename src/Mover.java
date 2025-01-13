@@ -53,7 +53,7 @@ public class Mover extends JLabel implements ActionListener{
 			dRow = 1;
 		
 	}
-	
+
 	// This method updates the sprite to idle
 	public void updateSprite() {
 		
@@ -107,6 +107,8 @@ public class Mover extends JLabel implements ActionListener{
 		// Update to idle
 		updateSprite();
 		
+		setDisplacement();
+		
 	}
 	
 	// This method rotates the player counter clockwise
@@ -118,6 +120,8 @@ public class Mover extends JLabel implements ActionListener{
 		
 		// Update to idle
 		updateSprite();
+		
+		setDisplacement(); 
 		
 	}
 
@@ -156,7 +160,19 @@ public class Mover extends JLabel implements ActionListener{
 		}
 		
 	}
+	
+	// This method sets the spawn of the player
+	public void setNewSpawn(int column, int row, int direction) {
+		
+		// Set the fields
+		defaultRow = row;
+		defaultColumn = column;
+		defaultDirection = direction;
 
+		// Reset the position of the player
+		reset();
+		
+	}
 	
 	// This method gets the next row based on the delta values
 	public int getNextRow() {
@@ -172,17 +188,28 @@ public class Mover extends JLabel implements ActionListener{
 		
 	}
 	
-	// This method sets the spawn of the player
-	public void setNewSpawn(int column, int row, int direction) {
-		
-		// Set the fields
-		defaultRow = row;
-		defaultColumn = column;
-		defaultDirection = direction;
+	public int getRow() {
+		return row;
+	}
 
-		// Reset the position of the player
-		reset();
-		
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+
+	public void setColumn(int column) {
+		this.column = column;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
 	}
 	
 }

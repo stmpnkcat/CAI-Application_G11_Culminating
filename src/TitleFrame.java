@@ -1,9 +1,9 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 /*
@@ -26,9 +26,8 @@ public class TitleFrame extends JFrame implements ActionListener{
 	private JButton activityButton;
 	private JButton assessmentButton;
 	private JButton exitButton;
-	
-	// Declare the starting level
-	private int activityLevel = 1;
+
+	private Clip clip = Utility.playSound("sounds/A Home for Flowers (Sunflower).wav", true);
 
 	// The constructor called when the frame is created
 	public TitleFrame() {
@@ -99,6 +98,11 @@ public class TitleFrame extends JFrame implements ActionListener{
 		// Showing the frame
 		setVisible(true);
 	}
+	
+	private void closeFrame() {
+		dispose();
+		clip.stop();
+	}
 
 	// This method is called whenever an action is performed
 	@Override
@@ -107,26 +111,34 @@ public class TitleFrame extends JFrame implements ActionListener{
 		// Get the source of the action
 		if (e.getSource() == conceptsButton) {
 			
-			dispose();
+			Utility.playSound("sounds/select.wav", false);
+			
+			closeFrame();
 			
 			// Open the concepts frame
 			new ConceptsFrame();
 			
 		} else if (e.getSource() == activityButton) {
 			
-			dispose();
+			Utility.playSound("sounds/select.wav", false);
+			
+			closeFrame();
 			
 			// Open the activity frame
 			new ActivityFrame();
 			
 		} else if (e.getSource() == assessmentButton) {
 			
-			dispose();
+			Utility.playSound("sounds/select.wav", false);
+			
+			closeFrame();
 			
 			// Open the assessment frame
 			new AssessmentFrame();
 			
 		} else if (e.getSource() == exitButton) {
+			
+			Utility.playSound("sounds/select.wav", false);
 			
 			// Close the program
 			System.exit(0);

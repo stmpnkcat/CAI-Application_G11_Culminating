@@ -8,15 +8,7 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -27,7 +19,9 @@ import javax.swing.border.LineBorder;
 public class Utility {
 
 	// Method to play a sound
-	public static void playSound(String soundFile) {
+	public static Clip playSound(String soundFile, boolean isLooping) {
+		
+		Clip clip = null;
 
 		// Try/catch for getting the file
 		// https://stackoverflow.com/questions/26305/how-can-i-play-sound-in-java
@@ -36,8 +30,14 @@ public class Utility {
 			File file = new File("./" + soundFile); // Create the sound file
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(file.toURI().toURL()); // Create the audo input
 																								// stream using the file
-			Clip clip = AudioSystem.getClip(); // Get the clip of the sound
+			clip = AudioSystem.getClip(); // Get the clip of the sound
 			clip.open(audioIn); // Open the clip
+			
+			if (isLooping) {
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
+				CAIApplication.clipList.add(clip);
+			}
+			
 			clip.start(); // Start the clip
 
 		} catch (Exception e) {
@@ -45,6 +45,8 @@ public class Utility {
 			System.err.println(e.getMessage());
 
 		}
+		
+		return clip;
 
 	}
 	
@@ -56,7 +58,7 @@ public class Utility {
 
 	// This method formats the frame given
 	public static void formatFrame(JFrame frame) {
-
+		
 		frame.setSize(CAIApplication.SCREEN_WIDTH, CAIApplication.SCREEN_HEIGHT); // Set the size
 		frame.setTitle("Modular Programming - Methods"); // Set the title
 		frame.setIconImage(Icons.LOGO.getImage()); // Set the logo
@@ -150,44 +152,37 @@ public class Utility {
 		
 	}
 	
-	// This method creates the back panel to go back to title page
 	public static JPanel createBackPanel(final JFrame frame) {
-		
-		// Create the panel
-		JPanel backPanel = new JPanel();
-		backPanel.setOpaque(false);
-		
-		// Create the title button
-		JButton titleButton = new JButton();
-		titleButton.setIcon(scaleImageIcon(Icons.ARROW_LEFT, 100, 100));
-		formatButton(titleButton);
-		
-		// Tell the button to go back to title page when clicked
-		titleButton.addActionListener(new ActionListener(){
-			
-			public void actionPerformed(ActionEvent e) {
-				
-				frame.dispose();
-				new TitleFrame();
-				
-			}
-			
-		});
-		
-		// Add the button
-		backPanel.add(titleButton);
-		
-		// Create the back label
-		JLabel backLabel = new JLabel("BACK");
-		backLabel.setForeground(Color.BLACK);
-		backLabel.setFont(Fonts.button2);
-		
-		// Add the back label
-		backPanel.add(backLabel);
-		
-		// Send back panel
-		return backPanel;
-		
+	    // The clip is not reassigned, so it can be effectively final
+	    JPanel backPanel = new JPanel();
+	    backPanel.setOpaque(false);
+
+	    JButton titleButton = new JButton();
+	    titleButton.setIcon(scaleImageIcon(Icons.ARROW_LEFT, 100, 100));
+	    formatButton(titleButton);
+
+	    titleButton.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+
+	        	for (Clip clip : CAIApplication.clipList) {
+	        		clip.stop();
+	        	}
+	        	
+	        	playSound("sounds/cancel.wav", false);
+	        	
+	            frame.dispose();
+	            new TitleFrame();
+	        }
+	    });
+
+	    JLabel backLabel = new JLabel("BACK");
+	    backLabel.setForeground(Color.BLACK);
+	    backLabel.setFont(Fonts.button2);
+
+	    backPanel.add(titleButton);
+	    backPanel.add(backLabel);
+
+	    return backPanel;
 	}
 
 	// This method creates a quick one line dialogue

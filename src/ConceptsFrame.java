@@ -7,11 +7,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.sound.sampled.Clip;
+import javax.swing.*;
 
 /*
  * This class creates the concepts page
@@ -40,6 +37,8 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 	// Declare lists for dialogue information
 	private ArrayList<String> textList = new ArrayList<>();
 	private ArrayList<ImageIcon> iconList = new ArrayList<>();
+	
+	private Clip clip = Utility.playSound("sounds/A Home for Flowers (Tulip).wav", true);
 	
 	// This constructor is called when a new frame is created
 	public ConceptsFrame() {
@@ -213,6 +212,10 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 			
 			// No more dialogue left
 			case -1:
+				
+				for (Clip clip : CAIApplication.clipList) {
+	        		clip.stop();
+	        	}
 				
 				// Close the frame and go back to title page
 				dispose();
