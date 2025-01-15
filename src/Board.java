@@ -143,18 +143,13 @@ public class Board extends JPanel implements ActionListener {
 		
 	}
 	
-	// This method loads the level image
-	public void loadLevel() {
+	// Method to return the sound file according to the level
+	private String getSoundFile() {
 		
-		isFinished = false;
-		
-		// Load the board first
-		loadBoard("levels/level_" + CAIApplication.activityLevel + ".txt");
-
-		// Set the background image
-		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[CAIApplication.activityLevel - 1], WIDTH, HEIGHT));
-		
+		// Create the starting sound file
 		String soundFile = "sounds/";
+		
+		// Add to the file according the the current level
 		switch(CAIApplication.activityLevel) {
 		case(1):
 			soundFile += "Trees....wav";
@@ -172,8 +167,25 @@ public class Board extends JPanel implements ActionListener {
 			soundFile += "Fade.wav";
 			break;
 		}
+		
+		// Return it
+		return soundFile;
+	}
+	
+	// This method loads the level image
+	public void loadLevel() {
+		
+		// Set the finished to false
+		isFinished = false;
+		
+		// Load the board first
+		loadBoard("levels/level_" + CAIApplication.activityLevel + ".txt");
 
-		frame.setClip(soundFile);
+		// Set the background image
+		backgroundLabel.setIcon(Utility.scaleImageIcon(Icons.LEVEL[CAIApplication.activityLevel - 1], WIDTH, HEIGHT));
+		
+		// Set the background sound of the activity frame
+		frame.setClip(getSoundFile());
 		
 	}
 

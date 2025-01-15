@@ -46,6 +46,7 @@ public class Icons {
 			new ImageIcon("images/basil_idle_right.png"),
 			new ImageIcon("images/basil_idle_down.png")};
 	
+	// Background icon
 	public static final ImageIcon BASIL_PLUSH = new ImageIcon("images/basil_plush.png");
 	
 	// Level icons

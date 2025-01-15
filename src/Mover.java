@@ -188,6 +188,7 @@ public class Mover extends JLabel implements ActionListener{
 		
 	}
 	
+	// Getters and setters
 	public int getRow() {
 		return row;
 	}

@@ -16,6 +16,7 @@ public class TitleFrame extends JFrame implements ActionListener{
 	private JLabel headerLabel;
 	private JLabel titleLabel;
 	
+	// Declare the background image label
 	private JLabel imageLabel;
 	
 	// Declare the button panel
@@ -27,6 +28,7 @@ public class TitleFrame extends JFrame implements ActionListener{
 	private JButton assessmentButton;
 	private JButton exitButton;
 
+	// Play the background music
 	private Clip clip = Utility.playSound("sounds/A Home for Flowers (Sunflower).wav", true);
 
 	// The constructor called when the frame is created
@@ -64,44 +66,54 @@ public class TitleFrame extends JFrame implements ActionListener{
 		Utility.formatTitleButton(conceptsButton);
 		conceptsButton.addActionListener(this);
 		
+		// Add the button to the panel
 		buttonPanel.add(conceptsButton);
 		
 		// Create the activity button
 		activityButton = new JButton("ACTIVITY");
 		Utility.formatTitleButton(activityButton);
 		activityButton.addActionListener(this);
-		
+
+		// Add the button to the panel
 		buttonPanel.add(activityButton);
 		
 		// Create the assessment button
 		assessmentButton = new JButton("ASSESSMENT");
 		Utility.formatTitleButton(assessmentButton);
 		assessmentButton.addActionListener(this);
-		
+
+		// Add the button to the panel
 		buttonPanel.add(assessmentButton);
 		
 		// Create the exit button
 		exitButton = new JButton("EXIT");
 		Utility.formatTitleButton(exitButton);
 		exitButton.addActionListener(this);
-		
+
+		// Add the button to the panel
 		buttonPanel.add(exitButton);
 		
 		// Create the button panel
 		buttonPanel.setBounds(100, 650, 1200, 100);
 		add(buttonPanel);
 		
+		// Create the background image
 		imageLabel = new JLabel(Icons.BASIL_PLUSH);
 		imageLabel.setBounds(350, 100, 847, 1031);
 		add(imageLabel);
 		
 		// Showing the frame
 		setVisible(true);
+		
 	}
 	
+	// Method the close the title frame
 	private void closeFrame() {
+		
+		// Close the frame and stop the background music
 		dispose();
 		clip.stop();
+		
 	}
 
 	// This method is called whenever an action is performed
@@ -111,8 +123,10 @@ public class TitleFrame extends JFrame implements ActionListener{
 		// Get the source of the action
 		if (e.getSource() == conceptsButton) {
 			
+			// Play the select noise
 			Utility.playSound("sounds/select.wav", false);
 			
+			// Close the frame
 			closeFrame();
 			
 			// Open the concepts frame
@@ -120,8 +134,10 @@ public class TitleFrame extends JFrame implements ActionListener{
 			
 		} else if (e.getSource() == activityButton) {
 			
+			// Play the select noise
 			Utility.playSound("sounds/select.wav", false);
 			
+			// Close the frame
 			closeFrame();
 			
 			// Open the activity frame
@@ -129,8 +145,10 @@ public class TitleFrame extends JFrame implements ActionListener{
 			
 		} else if (e.getSource() == assessmentButton) {
 			
+			// Play the select noise
 			Utility.playSound("sounds/select.wav", false);
 			
+			// Close the frame
 			closeFrame();
 			
 			// Open the assessment frame
@@ -138,6 +156,7 @@ public class TitleFrame extends JFrame implements ActionListener{
 			
 		} else if (e.getSource() == exitButton) {
 			
+			// Play the select sound
 			Utility.playSound("sounds/select.wav", false);
 			
 			// Close the program

@@ -4,14 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.*;
 
+/*
+ * This class creates the dialogue object as well as the panels for a dialogue
+ * The next button and back button change the dialogue
+ * The dialogue has a typewriter animation
+ */
 public class Dialogue extends JPanel implements ActionListener {
 
 	// Declare panels to be used by other classes
@@ -29,6 +28,7 @@ public class Dialogue extends JPanel implements ActionListener {
 	// Create the timer for the typewriter effect
 	private Timer typewriterTimer = new Timer(CAIApplication.DELAY_TYPEWRITER, this);
 	
+	// Declare a variable for counting the number of ticks
 	private int typewriterTick = 0;
 	
 	// Create a variable to hold the current dialogue number
@@ -45,17 +45,13 @@ public class Dialogue extends JPanel implements ActionListener {
 	private ArrayList<ImageIcon> profileIconList;
 	
 	// Constructor that is called when a new dialogue is created
-	// Optional perameters for storing current index
-	//https://stackoverflow.com/questions/965690/how-do-i-use-optional-parameters-in-java
-	public Dialogue(ArrayList<String> dialogueList, ArrayList<ImageIcon> profileIconList, JButton... currDialogueButton) {
+	public Dialogue(ArrayList<String> dialogueList, ArrayList<ImageIcon> profileIconList, JButton currDialogueButton) {
 		super(); // Used to create the object
 		
 		// Set fields
 		this.dialogueList = dialogueList;
 		this.profileIconList = profileIconList;
-		
-		if (currDialogueButton != null && currDialogueButton.length != 0) // If the current index button exists
-			this.currDialogueButton = currDialogueButton[0]; // Pass along the first and only index of the array
+		this.currDialogueButton = currDialogueButton; // Pass along the first and only index of the array
 		
 		// Create the profile panel
 		Utility.formatPanel(profilePanel);
@@ -102,6 +98,7 @@ public class Dialogue extends JPanel implements ActionListener {
 		backButton.addActionListener(this);
 		backButton.setIcon(Utility.scaleImageIcon(Icons.ARROW_LEFT, 100, 100));
 
+		// Add the back button
 		backButton.setVisible(false);
 		backButton.setEnabled(false);
 		backButton.setBounds(50, 200, 100, 100);
@@ -112,6 +109,7 @@ public class Dialogue extends JPanel implements ActionListener {
 		nextButton.addActionListener(this);
 		nextButton.setIcon(Utility.scaleImageIcon(Icons.ARROW_RIGHT, 100, 100));
 		
+		// Add the next button
 		nextButton.setBounds(1200, 200, 100, 100);
 		dialoguePanel.add(nextButton);
 		
@@ -123,14 +121,18 @@ public class Dialogue extends JPanel implements ActionListener {
 	// This method clears the dialogue
 	private void updateDialogue() {
 		
+		// If the dialogue is ongoing, update the profile label
 		if (currDialogue >= 0)
 			profileLabel.setIcon(Utility.scaleImageIcon(profileIconList.get(currDialogue), 150, 150));
 		
+		// Set the dialogue label text to html format
 		dialogueLabel.setText("<html></html>");
-		charIndex = 0;
+		charIndex = 0; // Reset the character index
 		
+		// Check if the dialogue button exists
 		if (currDialogueButton != null) {
 
+			// Set the new dialogue number
 			currDialogueButton.setText("" + currDialogue); // Set the text to track the current index
 			currDialogueButton.doClick(); // Trigger the action performed function in the frame this is in
 			
@@ -145,17 +147,19 @@ public class Dialogue extends JPanel implements ActionListener {
 		// If the typewriter timer goes off
 		if (e.getSource() == typewriterTimer) {
 			
-			typewriterTick++;
+			typewriterTick++; // Increment the tick counter
 			
 			// Check if the dialogue is done
 			if (charIndex >= dialogueList.get(currDialogue).length()) {
 
+				// Stop the animation
 				typewriterTimer.stop();
 				return;
 				
 			}
 			
-			if (typewriterTick % 2 == 0)
+			// Play a sound every 2 ticks
+			if (typewriterTick % 2 == 0 && currDialogueButton != null)
 				Utility.playSound("sounds/text.wav", false);
 			
 			// Add another character for the typewriter effect
@@ -192,6 +196,7 @@ public class Dialogue extends JPanel implements ActionListener {
 		// Check if the next button is pressed
 		} else if (e.getSource() == nextButton) {
 			
+			// Play a select sound effect
 			Utility.playSound("sounds/select.wav", false);
 
 			// Check if there are still more content to show

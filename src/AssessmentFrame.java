@@ -6,6 +6,10 @@ import java.util.*;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 
+/*
+ * This class creates the assessment frame to assess their knowledge
+ * It creates the quiz and gives the user feedback when they are done
+ */
 public class AssessmentFrame extends JFrame implements ActionListener{
 
 	// Create the index button
@@ -45,17 +49,22 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		Utility.formatFrame(this);
 		setLayout(null);
 		
+		// Add action listener to current dialogue
 		currDialogue.addActionListener(this);
 		
+		// Fill the answers array
 		for (int index = 0; index < ANSWERS.length; index++) {
 			selectedArray[index] = new JTextField();
 		}
 		
+		// Create a quick introductory dialogue
 		Utility.createQuickDialogue(this, currDialogue, 
 				"Welcome to the Assessment, where you can test your knowledge in methods!", Icons.BASIL_PROFILE[1]);
 		
+		// Set the state of the assessment
 		dialogueState = State.QUESTION;
 		
+		// Set the starting assessment level
 		CAIApplication.assessmentLevel = 0;
 
 		// Add the back panel
@@ -87,6 +96,7 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		textField.setBounds(x,y,width,height);
 		dialogue.getDialoguePanel().add(textField);
 		
+		// Put the new text field in the selected array
 		selectedArray[questionIndex] = textField;
 		
 	}
@@ -94,31 +104,47 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 	// This method creates the options
 	private void createOptions(final int questionIndex, String text, String... options) {
 		
+		// Create the dialogue
 		Dialogue dialogue = Utility.createQuickDialogue(this, currDialogue, 
 				text, Icons.BASIL_PROFILE[0]);
 		
+		// Create the button group
 		ButtonGroup group = new ButtonGroup();
 		
+		// Loop through each button
 		for (int buttonNum = 0; buttonNum < options.length; buttonNum++) {
 			
+			// Get the text of the option
 			String option = options[buttonNum];
 			
+			// Create a radio button and format it
 			JRadioButton optionButton = new JRadioButton(option);
-			
 			Utility.formatRadioButton(optionButton);
 
+			// Create a final variable for the button number
 			final int selectedNum = buttonNum;
+			
+			// Add a action listener to the button
 			optionButton.addActionListener(new ActionListener() {
+				
+				// This method is ran when the button is pressed
 				public void actionPerformed(ActionEvent e) {
+					
+					// Set the text to the number option selected
 					selectedArray[questionIndex].setText(selectedNum+"");
+					
 				}
+				
 			});
 			
+			// Set the default to the first button
 			if (buttonNum == 0) optionButton.doClick();
 			
+			// Add the button to the comp list and group
 			compList.add(optionButton);
 			group.add(optionButton);
 
+			// Add the button
 			optionButton.setBounds(50, 100 + 30 * buttonNum, 600, 30);
 			dialogue.getDialoguePanel().add(optionButton);
 			
@@ -126,6 +152,7 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		
 	}
 	
+	// This method creates a diagram
 	private void createDiagram(ImageIcon icon, int x, int y, int width, int height) {
 
 		// Create the diagram panel to hold the diagram
@@ -144,27 +171,33 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		
 	}
 	
+	// This method creates the next question
 	private void createNextQuestion() {
 		
+		// Set the state of the dialogue
 		dialogueState = State.FEEDBACK;
 		
+		// Create the question depending on the current level
 		switch (CAIApplication.assessmentLevel) {
-		case 0:
+		
+		case 0: // level 0
 			
+			// Create it
 			createOptions(0, 
 					"What is a method in Java?",
 					"A data type", 
 					"A block of code that performs a specific task", 
 					"A data structure", 
 					"A way of doing something");
-			break;
+			break; // Break out of switch
 			
 		case 1:
 			
+			// Create the diagram
 			createDiagram(Icons.DIAGRAM_SYNTAX, 370, 100, 500, 500);
 			
 			createOptions(1,
-					"The syntax of the above diagram is CORRECT and no errors will occur. ",
+					"The syntax of the above diagram is CORRECT and no errors will occur.",
 					"True",
 					"False");
 			break;
@@ -240,75 +273,106 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 		
 	}
 	
+	// This method returns the feedback
+	private String getFeedback() {
+		
+		// Declare the text
+		String text = "";
+		
+		// Check the assessment level
+		switch (CAIApplication.assessmentLevel) {
+		
+		case 0: // If the level is 0
+			
+			// Set the text
+			text = "That's wrong, a method is a block of code that performs a specific task.";
+			break; // Break out of switch
+			
+		case 1:
+			text = "It would be FALSE because the method has a return type JLabel, and nothing was returned.";
+			break;
+		case 2:
+			text = "You need all of those, so the correct answer is None of the above.";
+			break;
+		case 3:
+			text = "Wrong, a method that does not return any value is declared with return type VOID.";
+			break;
+		case 4:
+			text = "Nope, methods are a HIERARCHICAL form of management.";
+			break;
+		case 5:
+			text = "Incorrect, static methods can only call other static methods or non-static methods with a reference.";
+			break;
+		case 6:
+			text = "Static methods belong to a class and not to an object.";
+			break;
+		case 7:
+			text = "A stack overflow error will occur.";
+			break;
+		case 8:
+			text = "Method overiding allows multiple methods with the same name to be used in a class.";
+			break;
+		case 9:
+			text = "The RETURN keyword is used to explicitly return a value from a method.";
+			break;
+		
+		}
+		
+		// Return the text
+		return text;
+		
+	}
+	
+	// This method creates the feedback
 	private void createFeedback() {
 		
+		// Set the state of the dialogue
 		dialogueState = State.QUESTION;
 		
+		// Check if the option is correct ignoring spaces
 		if (selectedArray[CAIApplication.assessmentLevel].getText().replace(" ", "")
 				.equalsIgnoreCase(ANSWERS[CAIApplication.assessmentLevel])) {
 			
+			// Play a sound effect
 			Utility.playSound("sounds/save.wav", false);
 			
+			// Give a quick dialogue how it is correct
 			Utility.createQuickDialogue(this, currDialogue, "Nice, you got it correct!", Icons.BASIL_PROFILE[1]);
-			score++;
-			
+			score++; // Increment score
+		
+		// Otherwise the option is wrong
 		} else {
 			
-			String text = "";
-			
-			switch (CAIApplication.assessmentLevel) {
-			case 0:
-				text = "That's wrong, a method is a block of code that performs a specific task.";
-				break;
-			case 1:
-				text = "It would be FALSE because the method has a return type JLabel, and nothing was returned.";
-				break;
-			case 2:
-				text = "You need all of those, so the correct answer is None of the above.";
-				break;
-			case 3:
-				text = "Wrong, a method that does not return any value is declared with return type VOID";
-				break;
-			case 4:
-				text = "Nope, methods are a HIERARCHICAL form of management.";
-				break;
-			case 5:
-				text = "Incorrect, static methods can only call other static methods or non-static methods with a reference.";
-				break;
-			case 6:
-				text = "Static methods belong to a class and not to an object.";
-				break;
-			case 7:
-				text = "A stack overflow error will occur.";
-				break;
-			case 8:
-				text = "Method overiding allows multiple methods with the same name to be used in a class.";
-				break;
-			case 9:
-				text = "The RETURN keyword is used to explicitly return a value from a method.";
-				break;
-			
-			}
-
+			// Play a wrong sound effect
 			Utility.playSound("sounds/buzzer.wav", false);
-			Utility.createQuickDialogue(this, currDialogue, text, Icons.BASIL_PROFILE[2]);
+			
+			// Create a quick dialogue using the feedback method
+			Utility.createQuickDialogue(this, currDialogue, getFeedback() , Icons.BASIL_PROFILE[2]);
+			
 		}
 		
+		// Increment the assessment level
 		CAIApplication.assessmentLevel++;
 		
 	}
 
+	// This method creates the final feedback at the end of the quiz
 	private void createFinalFeedback() {
 	
+		// Set the dialogue state
 		dialogueState = State.FINISHED;
 		
+		// Check if the score is failing (below 50)
 		if (score <= ANSWERS.length / 2) {
 			
+			// Create the dialogue
 			Utility.createQuickDialogue(this, currDialogue, "You got " + score + 
 					" questions correct out of " + ANSWERS.length + ". You FAIL!", Icons.BASIL_PROFILE[3]);
-			
+		
+		// Otherwise the score is passing
 		} else {
 			
+			// Create the dialogue
 			Utility.createQuickDialogue(this, currDialogue, "You got " + score + 
 					" questions correct out of " + ANSWERS.length + ". You PASS!", Icons.BASIL_PROFILE[1]);
 			
@@ -332,25 +396,34 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 				
 			}
 			
+			// Check if the quiz is done
 			if (dialogueState == State.FINISHED) {
 				
+				// Stop the music
 				for (Clip clip : CAIApplication.clipList) {
 	        		clip.stop();
 	        	}
 				
+				// Close the frame and open the title
 				dispose();
 				new TitleFrame();
 				
+			// Check if there are no more questions
 			} else if (CAIApplication.assessmentLevel >= ANSWERS.length) {
 
+				// Create the final feedback
 				createFinalFeedback();
-				
+			
+			// Check if the state is question
 			} else if (dialogueState == State.QUESTION){
 				
+				// Create the next question
 				createNextQuestion();
-				
+			
+			// Check if the state is feedback
 			} else if (dialogueState == State.FEEDBACK) {
 				
+				// Create the next feedback
 				createFeedback();
 				
 			}

@@ -213,9 +213,13 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 			// No more dialogue left
 			case -1:
 				
+				// Stop the background music
 				for (Clip clip : CAIApplication.clipList) {
 	        		clip.stop();
 	        	}
+				
+				// Reset the concepts level
+				CAIApplication.conceptsLevel = 0;
 				
 				// Close the frame and go back to title page
 				dispose();
@@ -245,7 +249,8 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 				
 			// Dialogue 3
 			case 3:
-				
+			
+			// Dialogue 4
 			case 4:
 				
 				topicLabel.setText("Modularization");
@@ -283,7 +288,8 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 				
 			// Dialogue 9
 			case 9:
-				
+			
+			// Dialogue 10
 			case 10:
 				
 				topicLabel.setText("Multiple Parameters");
@@ -293,7 +299,8 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 				
 			// Dialogue 11
 			case 11:
-				
+			
+			// Dialogue 12
 			case 12:
 				topicLabel.setText("Calling a Method");
 				break;
@@ -306,6 +313,7 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 				createDiagram(Icons.DIAGRAM_RETURNING, 350, 70, 600, 500);
 				break;
 				
+			// Dialogue 14
 			case 14:
 				
 				topicLabel.setText("Method Call Stack");
@@ -332,7 +340,5 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 		}
 		
 	}
-	
-	
 	
 }

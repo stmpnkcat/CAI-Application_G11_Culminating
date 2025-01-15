@@ -2,16 +2,10 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 
 import javax.sound.sampled.Clip;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 /*
  * This class creates the activity frame
@@ -36,6 +30,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 	// Create a new board
 	private Board board;
 	
+	// Declare a clip
 	private Clip clip = null;
 	
 	// This constructor is called when a new activity frame is created
@@ -49,7 +44,8 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		currDialogue = new JButton();
 		currDialogue.addActionListener(this);
 		
-		Utility.createQuickDialogue(this, currDialogue, "Help me get to the picnic basket by calling methods in the editor!", Icons.BASIL_PROFILE[1]);
+		// Create a one line dialogue explaining the activity
+		Utility.createQuickDialogue(this, currDialogue, "Help me get to the picnic basket by calling methods on the right of the screen.", Icons.BASIL_PROFILE[1]);
 		
 		// Create the board
 		board = new Board(this);
@@ -116,6 +112,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		backPanel.setBounds(0, 0, 300, 100);
 		add(backPanel);
 		
+		// Disable everything
 		enableAll(false);
 		
 		// Show the frame
@@ -130,6 +127,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		// Check the action source
 		if (e.getSource() == runButton) {
 			
+			// Play the select sound
 			Utility.playSound("sounds/select.wav", false);
 			
 			// Disable to run button
@@ -139,7 +137,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 			String text = codeTextArea.getText();
 			String[] lines = text.split("\n"); // Convert to array of lines
 			
-			// Create a new commands deque
+			// Create a new commands double-ended queue
 			Deque<Integer> commandsQueue = new ArrayDeque<>();
 			
 			// Create a variable for if the code is valid or not
@@ -168,12 +166,13 @@ public class ActivityFrame extends JFrame implements ActionListener{
 						// Get the character at that position
 						char currChar = line.charAt(i);
 						
-						// Check if the string contains a character that is not a character
+						// Check if the string contains a character that is not a number
 						if (!numbers.contains("" + currChar)) 
 							
 							// Invalidate it with error code -1
 							validityID = -1;
 						
+						// Else it is a number
 						else {
 							
 							// Add the current number to the string
@@ -183,13 +182,20 @@ public class ActivityFrame extends JFrame implements ActionListener{
 						
 					}
 					
+					// Get the number
+					int num = Integer.parseInt(numberString);
+					
 					// Check if the number string is empty
 					if (numberString.equals("")) 
 						validityID = -2; // invalidate it with error code -2
 					
+					// Check if the command moves too many tiles
+					else if (num >= 20)
+						validityID = -4;
+					
 					// Check if there are no errors
 					else if (validityID == 0)
-						commandsQueue.add(Integer.parseInt(numberString)); // Add the number to the command queue
+						commandsQueue.add(num); // Add the number to the command queue
 				
 				// Check if the next command is rotate clockwise
 				} else if (line.indexOf("rotate_clockwise();") == 0 || line.indexOf("rotate_clockwise ();") == 0) {
@@ -228,7 +234,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currDialogue, "your code doesn't work, maybe you put letters instead of numbers in the move arguments?", Icons.BASIL_PROFILE[2]);
+				Utility.createQuickDialogue(this, currDialogue, "Your code doesn't work, maybe you put letters instead of numbers in the move arguments?", Icons.BASIL_PROFILE[2]);
 				
 				break;
 				
@@ -238,7 +244,7 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currDialogue, "your code doesn't work, i think you need to put arguments in the move command.", Icons.BASIL_PROFILE[2]);
+				Utility.createQuickDialogue(this, currDialogue, "Your code doesn't work, i think you need to put arguments in the move command.", Icons.BASIL_PROFILE[2]);
 				
 				break;
 				
@@ -248,14 +254,22 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				enableAll(false);
 				
 				// Create a new dialogue
-				Utility.createQuickDialogue(this, currDialogue, "your code doesn't work, maybe you made a typo or something.", Icons.BASIL_PROFILE[2]);
+				Utility.createQuickDialogue(this, currDialogue, "Your code doesn't work, maybe you made a typo or something.", Icons.BASIL_PROFILE[2]);
 				
 				break;
 			
+			case -4:
+				
+				enableAll(false);
+				
+				Utility.createQuickDialogue(this, currDialogue, "You inputed too high of a number for one of the move() commands.", Icons.BASIL_PROFILE[2]);
+			
 			}
 			
+			// Play the buzzer sound effect
 			Utility.playSound("sounds/buzzer.wav", false);
-			
+		
+		// Check if the action was the current dialogue
 		} else if (e.getSource() == currDialogue) {
 			
 			// Get the current index
@@ -267,14 +281,18 @@ public class ActivityFrame extends JFrame implements ActionListener{
 				// Load the level if the board is finished
 				if (board.isFinished()) {
 					
+					// Check if the activity is done
 					if (CAIApplication.activityLevel > 5) {
 						
+						// Create a short dialogue about finishing the activity
 						Utility.createQuickDialogue(this, currDialogue, 
 								"Congrats! You finished the activity, you can play again or check out the assessment.", 
 								Icons.BASIL_PROFILE[1]);
 						
+						// Set the level to 1
 						CAIApplication.activityLevel = 1;
-						
+					
+					// If the activity is not done, clear the code and load the next level
 					} else {
 
 						codeTextArea.setText("");
@@ -297,20 +315,22 @@ public class ActivityFrame extends JFrame implements ActionListener{
 	public void enableAll(boolean bool) {
 		
 		runButton.setEnabled(bool);
+		codeTextArea.setEditable(bool);
 		codeTextArea.setEnabled(bool);
+		codeTextArea.setFocusable(bool);
 		
 	}
 
+	// Getters
 	public JButton getCurrDialogue() {
-		
 		return currDialogue;
-		
 	}
 	
 	public Clip getClip() {
 		return clip;
 	}
 	
+	// Sound setter
 	public void setClip(String soundFile) {
 
 		if (clip != null)

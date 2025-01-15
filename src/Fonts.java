@@ -53,8 +53,8 @@ public class Fonts {
 		header = new Font(Font.MONOSPACED, Font.PLAIN, 40);
 		title = handwriting.deriveFont(200f);
 		button = handwriting.deriveFont(30f);
-		button2 = new Font(Font.SANS_SERIF, Font.PLAIN, 40);
-		rb = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+		button2 = new Font("Comic Sans MS", Font.PLAIN, 40);
+		rb = new Font("Comic Sans MS", Font.PLAIN, 20);
 		name = new Font("Comic Sans MS", Font.PLAIN, 30);
 		dialogue = new Font("Comic Sans MS", Font.PLAIN, 20);
 		code = new Font(Font.MONOSPACED, Font.PLAIN, 15);
