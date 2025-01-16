@@ -36,6 +36,7 @@ public class Mover extends JLabel implements ActionListener{
 	}
 	
 	// This method sets the delta using the direction
+	// Retrieved from the PacMan project
 	private void setDisplacement() {
 		
 		// Resetting the delta values

@@ -45,7 +45,8 @@ public class ActivityFrame extends JFrame implements ActionListener{
 		currDialogue.addActionListener(this);
 		
 		// Create a one line dialogue explaining the activity
-		Utility.createQuickDialogue(this, currDialogue, "Help me get to the picnic basket by calling methods on the right of the screen.", Icons.BASIL_PROFILE[1]);
+		Utility.createQuickDialogue(this, currDialogue, "Help me get to the picnic basket by calling the methods on the right of the screen. "
+				+ "For example, for this level, call move(6); to move me to the basket.", Icons.BASIL_PROFILE[1]);
 		
 		// Create the board
 		board = new Board(this);

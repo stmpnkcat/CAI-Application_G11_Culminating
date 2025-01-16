@@ -28,6 +28,7 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 	// Declare the back panel for the back button
 	private JPanel backPanel;
 	
+	// Declare the topic panel
 	private JPanel topicPanel = new JPanel();
 	private JLabel topicLabel = new JLabel();
 	
@@ -38,6 +39,7 @@ public class ConceptsFrame extends JFrame implements ActionListener{
 	private ArrayList<String> textList = new ArrayList<>();
 	private ArrayList<ImageIcon> iconList = new ArrayList<>();
 	
+	// Play the background music
 	private Clip clip = Utility.playSound("sounds/A Home for Flowers (Tulip).wav", true);
 	
 	// This constructor is called when a new frame is created

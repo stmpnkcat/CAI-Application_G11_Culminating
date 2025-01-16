@@ -22,13 +22,15 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 	private ArrayList<Component> compList = new ArrayList<>();
 
 	// Create answers list
-	private final String[] ANSWERS = {"1", "1", "4", "VOID", "HIERARCHICAL", "1", "2", "0", "3", "RETURN"};
+	private final String[] ANSWERS = {"1", "1", "3", "VOID", "HIERARCHICAL", "1", "2", "0", "3", "RETURN"};
 	
 	// Create array for the selected options
 	private JTextField[] selectedArray = new JTextField[ANSWERS.length];
 	
+	// Declare a counter for the score
 	private int score;
 
+	// Create the background music
 	private Clip clip = Utility.playSound("sounds/A Home for Flowers (Tulip).wav", true);
 	
 	// Create variable for the state
@@ -209,8 +211,7 @@ public class AssessmentFrame extends JFrame implements ActionListener{
 					"Access modifier", 
 					"Return type", 
 					"Method name", 
-					"List of parameters", 
-					"None of the above");
+					"You need all of the above");
 			break;
 			
 		case 3:

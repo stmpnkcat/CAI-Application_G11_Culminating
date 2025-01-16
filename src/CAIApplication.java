@@ -12,10 +12,17 @@ import javax.sound.sampled.Clip;
  * Title: Modular Programming - Methods
  * 
  * Description:
+ * 
  * This Computer-Assisted Instruction teaches users about java methods in many engaging ways.
+ * The concepts are presented in an interactive way using a typewriter animation as well as with diagrams.
+ * Users can navigate through each topic in the concepts with the back and forward button. 
+ * In the activity, the user can call methods using the code editor with feedback if there are errors in the code.
+ * The goal of the activity is to call methods to move the character to the picnic basket. 
+ * In the assessment, the user gets a variety of multiple choice, true/false, and fill in the blanks.
+ * If the user gets a question wrong, they will get feedback on the correct answer.
  * 
  * Features:
- * - Interactive way of presenting information through dialogue
+ * 
  * - Interactive dialogue with typewriter effect and changing profile icons
  * - Pseudo "code" editor
  * - Smooth grid-based player movement
@@ -51,7 +58,8 @@ import javax.sound.sampled.Clip;
  * Areas of Concern:
  * - Comic Sans MS may not be available due to the version of Java.
  * - In the Assessment frame, the dialogue next button may disappear, when this happens, click where the next button would be if it was visible.
- * - For the Assessment frame, you must move the character into the picnic basket instead of one tile in front of it.
+ * - For the Activity frame, you must move the character into the picnic basket instead of one tile in front of it.
+ * - In the Activity frame, inputting methods onto the same line will not work, as each line can only interpret one code.
  * 
  * Activity Solutions:
 
